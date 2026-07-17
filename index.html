@@ -2691,7 +2691,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 
   // ---------- globe of major world faults ----------
   const FAULTS = [
-    {name:"San Andreas Fault", region:"California, USA", quake:"1906 \u00b7 M7.9 San Francisco", type:"strike", desc:"Right-lateral strike-slip boundary between the Pacific and North American plates.",
+    {name:"San Andreas Fault", region:"California, USA", quake:"1906 \u00b7 M7.9 San Francisco", type:"strike", desc:"Right-lateral strike-slip fault, the most extensively studied in the world.",
       pts:[[32.8,-115.6],[34.8,-118.4],[36.0,-120.4],[38.8,-123.0]]},
     {name:"North Anatolian Fault", region:"Turkey", quake:"1999 \u00b7 M7.6 \u0130zmit", type:"strike", desc:"Right-lateral strike-slip fault that has produced a westward-migrating sequence of major earthquakes over the past century.",
       pts:[[39.7,41.0],[40.6,36.0],[40.7,30.5],[40.9,27.5]]},
@@ -2699,7 +2699,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       pts:[[38.5,39.3],[37.8,37.5],[36.9,36.2]]},
     {name:"Dead Sea Transform", region:"Israel, Jordan, Lebanon", quake:"1995 \u00b7 M7.3 Gulf of Aqaba", type:"strike", desc:"Left-lateral strike-slip boundary accommodating the Arabian plate sliding north past Africa.",
       pts:[[29.5,34.9],[31.5,35.4],[33.5,36.0]]},
-    {name:"Alpine Fault", region:"South Island, New Zealand", quake:"1717 \u00b7 ~M8.1 (last full rupture)", type:"strike", desc:"Right-lateral strike-slip with a reverse component, marking the Pacific-Australian plate boundary. Overdue for another full rupture.",
+    {name:"Alpine Fault", region:"South Island, New Zealand", quake:"1717 \u00b7 ~M8.1 (last full rupture)", type:"strike", desc:"Right-lateral strike-slip with a reverse component. Overdue for another full rupture.",
       pts:[[-44.7,168.0],[-43.0,170.7],[-41.8,172.7]]},
     {name:"Sagaing Fault", region:"Myanmar", quake:"2025 \u00b7 M7.7 Mandalay", type:"strike", desc:"Right-lateral strike-slip fault running directly through Mandalay and other major cities.",
       pts:[[24.2,96.3],[21.0,95.9],[17.5,96.5]]},
@@ -2711,7 +2711,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       pts:[[34.5,67.0],[31.5,66.5],[29.0,66.0]]},
     {name:"Himalayan Main Frontal Thrust", region:"Nepal, India", quake:"2015 \u00b7 M7.8 Gorkha", type:"reverse", desc:"Reverse fault where the Indian plate is thrust beneath the Himalaya, building the range.",
       pts:[[29.3,80.2],[28.2,84.2],[27.6,87.8],[26.9,92.0]]},
-    {name:"Cascadia Subduction Zone", region:"Pacific Northwest, USA/Canada", quake:"1700 \u00b7 ~M9.0 (full margin rupture)", type:"reverse", desc:"Offshore megathrust where the Juan de Fuca plate dives beneath North America.",
+    {name:"Cascadia Subduction Zone", region:"Pacific Northwest, USA/Canada", quake:"1700 \u00b7 ~M9.0 (full margin rupture)", type:"reverse", desc:"Offshore megathrust capable of full-margin rupture and a major Pacific-wide tsunami.",
       pts:[[40.4,-124.6],[44.5,-124.6],[48.5,-126.5]]},
     {name:"Sunda Megathrust", region:"Indonesia", quake:"2004 \u00b7 M9.1 Indian Ocean", type:"reverse", desc:"Subduction megathrust responsible for the 2004 Indian Ocean earthquake and tsunami.",
       pts:[[5.8,95.2],[0.5,98.4],[-5.5,103.5],[-8.0,110.0]]},
@@ -2719,11 +2719,11 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       pts:[[40.5,143.8],[38.3,142.9],[35.8,141.0]]},
     {name:"Nankai Trough", region:"Southwest Japan", quake:"1946 \u00b7 M8.1 Nankaido", type:"reverse", desc:"Megathrust that has ruptured roughly every 100\u2013150 years, with another major event considered overdue.",
       pts:[[34.5,138.0],[33.3,136.0],[32.0,132.5]]},
-    {name:"Peru-Chile Trench", region:"Chile, Peru", quake:"1960 \u00b7 M9.5 Valdivia (largest ever recorded)", type:"reverse", desc:"Megathrust along the Nazca-South American boundary, source of the largest earthquake ever instrumentally recorded.",
+    {name:"Peru-Chile Trench", region:"Chile, Peru", quake:"1960 \u00b7 M9.5 Valdivia (largest ever recorded)", type:"reverse", desc:"Megathrust responsible for the largest earthquake ever instrumentally recorded.",
       pts:[[-18.5,-71.0],[-30.0,-72.0],[-38.5,-73.5]]},
     {name:"Makran Subduction Zone", region:"Iran, Pakistan", quake:"1945 \u00b7 M8.1 Balochistan", type:"reverse", desc:"One of the widest subduction megathrusts on Earth, capable of generating major tsunamis in the Arabian Sea.",
       pts:[[25.5,61.0],[25.0,63.5],[24.7,66.0]]},
-    {name:"Zagros Fold-Thrust Belt", region:"Iran", quake:"1990 \u00b7 M7.4 Manjil-Rudbar", type:"reverse", desc:"Reverse faulting from the ongoing collision between the Arabian and Eurasian plates.",
+    {name:"Zagros Fold-Thrust Belt", region:"Iran", quake:"1990 \u00b7 M7.4 Manjil-Rudbar", type:"reverse", desc:"Reverse faulting from an ongoing continental collision, building the Zagros mountains.",
       pts:[[33.5,47.5],[31.0,50.5],[28.0,53.5]]},
     {name:"New Madrid Seismic Zone", region:"Central USA", quake:"1811\u201312 \u00b7 ~M7\u20138 series", type:"strike", desc:"A rare intraplate fault zone, far from any plate boundary, that produced one of the largest earthquake sequences in US history.",
       pts:[[36.6,-89.6],[36.3,-89.5],[35.9,-90.1]]},
@@ -3248,12 +3248,9 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       '<div class="fault-detail-grid">' +
         '<div class="fault-detail-item wide"><div class="fault-detail-label">Tectonic setting</div><div class="fault-detail-value">' + escapeHtml(setting) + '</div></div>' +
         '<div class="fault-detail-item"><div class="fault-detail-label">Displayed trace</div><div class="fault-detail-value">≈ ' + trace + '</div></div>' +
-        '<div class="fault-detail-item"><div class="fault-detail-label">Mechanism</div><div class="fault-detail-value">' + escapeHtml(MECH_LABEL[f.type]) + '</div></div>' +
         '<div class="fault-detail-item wide"><div class="fault-detail-label">Notable earthquake</div><div class="fault-detail-value fault-info-quake">' + escapeHtml(f.quake) + '</div></div>' +
-        '<div class="fault-detail-item wide"><div class="fault-detail-label">Data source</div><div class="fault-detail-value">Curated named-fault summary · simplified display geometry</div></div>' +
       '</div>' +
-      '<div class="fault-info-desc">' + escapeHtml(f.desc) + '</div>' +
-      '<div class="fault-info-note">Educational overview only · not suitable for site-specific hazard assessment.</div>';
+      '<div class="fault-info-desc">' + escapeHtml(f.desc) + '</div>';
     if(withTooltip){
       tooltipEl.innerHTML = escapeHtml(f.name) + '<span class="region">' + escapeHtml(f.region) + '</span>';
       tooltipArmed = true;
