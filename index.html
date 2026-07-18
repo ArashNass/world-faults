@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Global Faults Map - Tectonic Plates and Recent Earthquakes | Arash Nassirpour</title>
-<meta name="description" content="Interactive globe of tectonic plate boundaries, 22 named fault systems and significant earthquakes from the past 30 days, with live USGS data. Spin the globe and explore how the planet moves." />
+<title>World Faults &amp; Earthquakes | Arash Nassirpour</title>
+<meta name="description" content="Explore an interactive 3D globe of tectonic plate boundaries, 22 named fault systems, and recent significant earthquakes from USGS with a verified snapshot fallback." />
 <link rel="canonical" href="https://arashnassirpour.com/world-faults/" />
-<meta property="og:title" content="Global Faults Map - Tectonic Plates and Recent Earthquakes | Arash Nassirpour" />
-<meta property="og:description" content="Interactive globe of tectonic plate boundaries, 22 named fault systems and significant earthquakes from the past 30 days, with live USGS data. Spin the globe and explore how the planet moves." />
+<meta property="og:title" content="World Faults &amp; Earthquakes | Arash Nassirpour" />
+<meta property="og:description" content="Explore an interactive 3D globe of tectonic plate boundaries, 22 named fault systems, and recent significant earthquakes from USGS with a verified snapshot fallback." />
 <meta property="og:url" content="https://arashnassirpour.com/world-faults/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Arash Nassirpour" />
@@ -1588,7 +1588,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Global Faults Map",
+  "name": "World Faults & Earthquakes",
   "applicationCategory": "EngineeringApplication",
   "operatingSystem": "Web",
   "url": "https://arashnassirpour.com/world-faults/",
@@ -1656,231 +1656,22 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 </script>
 </header>
 
-<nav class="topnav" role="navigation">
-  <div class="topnav-inner">
-    <div class="nav-tabs">
-      <button class="nav-tab active" id="tab1" type="button">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 14v-4M12 14v-8M18 14v-2"/><line x1="2" y1="14" x2="22" y2="14"/></svg>
-        Fault mechanism
-        <span class="nav-tab-badge">3D block</span>
-      </button>
-      <button class="nav-tab" id="tab2" type="button">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        World faults &amp; earthquakes
-        <span class="nav-tab-badge">Live data</span>
-      </button>
-    </div>
-    <div class="nav-right">
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
-        <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span id="themeLabel">Dark mode</span>
-      </button>
-    </div>
-  </div>
-</nav>
 
 <div class="app">
-
-  <div class="page" id="page1">
-    <header class="header">
-      <div class="brand">
-        <div>
-          <h1>Fault mechanism</h1>
-          <div class="subtitle">Set the fault type and watch strike, dip, and rake update on the 3D block diagram in real time. Hit play to see the hanging wall slip.</div>
-        </div>
-      </div>
-    </header>
-
-  <div class="layout">
-    <main class="card viewer-card">
-      <div id="loading" class="loading">
-        <div>
-          <div class="loading-text">Loading 3D scene…</div>
-          <small>If this stays visible, your browser may be blocking the external 3D library.</small>
-        </div>
-      </div>
-
-      <div id="onboarding" class="onboarding hidden">
-        <div class="onboarding-card">
-          <div class="eyebrow">Quick start</div>
-          <h3>How to read this model</h3>
-          <ul>
-            <li>Drag the scene to rotate, scroll to zoom in or out.</li>
-            <li>Blue = footwall, orange = hanging wall, the block that moves.</li>
-            <li>Pick a mechanism, then hit <strong>Play slip motion</strong> to see it happen.</li>
-          </ul>
-          <button id="onboardingBtn" type="button">Got it, let's go</button>
-        </div>
-      </div>
-
-      <div class="viewer-topbar">
-        <div class="scene-label">
-          <div class="eyebrow">Block diagram</div>
-          <div class="title">Footwall &amp; hanging wall</div>
-        </div>
-        <div>
-          <div class="kpi-row">
-            <div class="kpi"><div class="k">Strike</div><div class="v" id="kpiStrike">045°</div></div>
-            <div class="kpi"><div class="k">Dip dir.</div><div class="v" id="kpiDipDir">135°</div></div>
-            <div class="kpi"><div class="k">Style</div><div class="v" id="kpiStyle">Right slip</div></div>
-          </div>
-          <div class="cam-group">
-            <button class="cam-btn active" id="camIso" type="button">Iso</button>
-            <button class="cam-btn" id="camTop" type="button">Top</button>
-            <button class="cam-btn" id="camSide" type="button">Side</button>
-          </div>
-        </div>
-      </div>
-
-      <canvas id="viewer"></canvas>
-
-      <div class="viewer-bottombar">
-        <div class="legend">
-          <div class="legend-item"><span class="swatch" style="background:var(--footwall)"></span>Footwall</div>
-          <div class="legend-item"><span class="swatch" style="background:var(--hangingwall)"></span>Hanging wall</div>
-          <div class="legend-item"><span class="swatch" style="background:var(--strike)"></span>Strike</div>
-          <div class="legend-item"><span class="swatch" style="background:var(--dip)"></span>Dip</div>
-          <div class="legend-item"><span class="swatch" style="background:var(--rake)"></span>Rake</div>
-          <div class="legend-item"><span class="swatch" style="background:var(--slip)"></span>Slip vector</div>
-        </div>
-        <div class="hint-row">
-          <button id="playBtn" class="play-btn" type="button">
-            <svg id="playIcon" width="11" height="11" viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z" fill="currentColor"/></svg>
-            <span id="playLabel">Play slip motion</span>
-          </button>
-          <div class="hint">Drag to rotate, scroll to zoom</div>
-        </div>
-      </div>
-    </main>
-
-    <aside class="card side">
-      <div class="side-top">
-        <h2>Controls</h2>
-      </div>
-
-      <div class="segmented">
-        <div class="seg active" id="strictBtn">Strict realistic</div>
-        <div class="seg" id="learnBtn">Learning range</div>
-      </div>
-
-      <div class="control">
-        <div class="control-top">
-          <div class="control-name"><span class="dot" style="background:var(--fault)"></span>Mechanism</div>
-        </div>
-        <select id="mechanism">
-          <option value="rightStrike">Right-lateral strike-slip</option>
-          <option value="leftStrike">Left-lateral strike-slip</option>
-          <option value="normal">Normal fault</option>
-          <option value="reverse">Reverse / thrust fault</option>
-          <option value="obliqueNormal">Oblique normal fault</option>
-          <option value="obliqueReverse">Oblique reverse fault</option>
-        </select>
-        <div class="help">Pick a rupture style. Dip and rake ranges adjust to keep the geometry realistic.</div>
-      </div>
-
-      <div class="control">
-        <div class="control-top">
-          <div class="control-name"><span class="dot" style="background:var(--strike)"></span>Strike</div>
-          <div class="value" style="color:var(--strike)"><span id="strikeVal">045</span>°</div>
-        </div>
-        <input id="strike" type="range" min="0" max="359" value="45">
-        <div class="range-row"><span>0°</span><span>359°</span></div>
-        <div class="help">Compass orientation of the horizontal fault trace.</div>
-      </div>
-
-      <div class="control">
-        <div class="control-top">
-          <div class="control-name"><span class="dot" style="background:var(--dip)"></span>Dip</div>
-          <div class="value" style="color:var(--dip)"><span id="dipVal">80</span>°</div>
-        </div>
-        <input id="dip" type="range" min="70" max="90" value="80">
-        <div class="range-row"><span id="dipMin">70°</span><span id="dipMax">90°</span></div>
-        <div class="help" id="dipHelp">Steep to near-vertical strike-slip geometry.</div>
-      </div>
-
-      <div class="control">
-        <div class="control-top">
-          <div class="control-name"><span class="dot" style="background:var(--rake)"></span>Rake</div>
-          <div class="value" style="color:var(--rake)"><span id="rakeVal">170</span>°</div>
-        </div>
-        <input id="rake" type="range" min="150" max="180" value="170">
-        <div class="range-row"><span id="rakeMin">150°</span><span id="rakeMax">180°</span></div>
-        <div class="help" id="rakeHelp">Rake sets the direction of slip along the fault plane.</div>
-      </div>
-
-      <div class="result">
-        <div class="result-label">Rupture format</div>
-        <div class="format" id="formatText">045° / 80° / 170°</div>
-        <div class="sentence" id="sentence">Strike 045°, dip 80°, rake 170°. Right-lateral strike-slip movement.</div>
-
-        <div class="result-grid">
-          <div class="cat">
-            <svg width="86" height="86" viewBox="0 0 230 230" aria-label="Focal mechanism preview">
-              <defs>
-                <clipPath id="clipBall"><circle cx="115" cy="115" r="90"/></clipPath>
-              </defs>
-              <circle cx="115" cy="115" r="91" fill="#ffffff" stroke="#10172a" stroke-width="3"/>
-              <g clip-path="url(#clipBall)">
-                <rect x="24" y="24" width="182" height="182" fill="#ffffff"/>
-                <ellipse id="eye1" cx="115" cy="115" rx="96" ry="28" fill="#10172a"/>
-                <ellipse id="eye2" cx="115" cy="115" rx="96" ry="28" fill="#10172a" opacity=".9"/>
-                <path id="eyeTint" d="M20 115 C58 84, 172 84, 210 115 C168 105, 62 105, 20 115Z" fill="#2b6df0" opacity=".18"/>
-              </g>
-              <circle cx="115" cy="115" r="91" fill="none" stroke="#10172a" stroke-width="3"/>
-              <text x="107" y="15" font-size="16" font-weight="900" fill="#10172a">N</text>
-              <line x1="115" y1="20" x2="115" y2="36" stroke="#10172a" stroke-width="3"/>
-            </svg>
-          </div>
-
-          <div class="result-cards">
-            <div class="result-mini"><div class="k">Mechanism</div><div class="v" id="mechLabel">Right-lateral strike-slip</div></div>
-            <div class="result-mini"><div class="k">Movement</div><div class="v" id="motionLabel">Lateral shear</div></div>
-          </div>
-        </div>
-
-        <div class="copy-row">
-          <button class="copy-btn" id="copyValuesBtn" type="button">Copy values</button>
-          <button class="copy-btn" id="copyLinkBtn" type="button">Copy link</button>
-        </div>
-      </div>
-
-      <div class="quick">
-        <button onclick="setPreset('rightStrike')">Right strike-slip</button>
-        <button onclick="setPreset('normal')">Normal</button>
-        <button onclick="setPreset('reverse')">Reverse</button>
-        <button onclick="setPreset('obliqueReverse')">Oblique reverse</button>
-      </div>
-
-      <div class="mini">
-        <strong>Strict realistic</strong> keeps each mechanism in a narrow textbook range. <strong>Learning range</strong> widens the degree options while still avoiding unrealistic combinations.
-      </div>
-
-      <button class="compare-toggle" id="compareToggle" type="button">
-        <span>Compare all six mechanisms</span>
-        <svg class="chev" width="11" height="11" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </aside>
-  </div>
-
-  <div class="card" id="compareCard" style="display:none">
-    <div class="side" style="padding:18px">
-      <div class="side-top" style="margin-bottom:8px">
-        <h2>Side by side</h2>
-        <div class="tag" style="background:var(--bg)">Click any card to load it above</div>
-      </div>
-      <div class="compare-panel open" id="comparePanel"></div>
-    </div>
-  </div>
-
-  </div><!-- /page1 -->
 
   <div class="page active" id="page2">
     <header class="header">
       <div class="brand">
         <div>
-          <h1>World faults &amp; earthquakes</h1>
+          <h1>World Faults &amp; Earthquakes</h1>
           <div class="subtitle">Tectonic plate boundaries by mechanism, 22 named faults, and significant earthquakes from the past 30 days.</div>
         </div>
+      </div>
+      <div class="header-tags">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="themeLabel">Dark mode</span>
+        </button>
       </div>
     </header>
     <div class="card">
@@ -1992,10 +1783,13 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 
 <script>
 (function(){
-  const loading = document.getElementById("loading");
+  const globePage = document.getElementById("page2");
 
   function showError(msg){
-    loading.innerHTML = "<div><div class='loading-text'>3D library failed to load</div><small>" + msg + "</small></div>";
+    const error = document.createElement("div");
+    error.className = "loading";
+    error.innerHTML = "<div><div class='loading-text'>3D library failed to load</div><small>" + msg + "</small></div>";
+    globePage.prepend(error);
   }
   window.addEventListener("error", function(e){
     if(String(e.message || "").includes("THREE") || String(e.filename || "").includes("three")){
@@ -2009,496 +1803,6 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
     return;
   }
 
-  const strictBtn = document.getElementById("strictBtn");
-  const learnBtn = document.getElementById("learnBtn");
-  const mechanismEl = document.getElementById("mechanism");
-  const strikeEl = document.getElementById("strike");
-  const dipEl = document.getElementById("dip");
-  const rakeEl = document.getElementById("rake");
-  const strikeVal = document.getElementById("strikeVal");
-  const dipVal = document.getElementById("dipVal");
-  const rakeVal = document.getElementById("rakeVal");
-  const dipMin = document.getElementById("dipMin");
-  const dipMax = document.getElementById("dipMax");
-  const rakeMin = document.getElementById("rakeMin");
-  const rakeMax = document.getElementById("rakeMax");
-  const dipHelp = document.getElementById("dipHelp");
-  const rakeHelp = document.getElementById("rakeHelp");
-  const formatText = document.getElementById("formatText");
-  const sentence = document.getElementById("sentence");
-  const mechLabel = document.getElementById("mechLabel");
-  const motionLabel = document.getElementById("motionLabel");
-  const kpiStrike = document.getElementById("kpiStrike");
-  const kpiDipDir = document.getElementById("kpiDipDir");
-  const kpiStyle = document.getElementById("kpiStyle");
-  const eye1 = document.getElementById("eye1");
-  const eye2 = document.getElementById("eye2");
-  const eyeTint = document.getElementById("eyeTint");
-
-  let mode = "strict";
-
-  const config = {
-    strict:{
-      rightStrike:{name:"Right-lateral strike-slip",short:"Right slip",motion:"Lateral shear",dip:[70,90,80],rake:[150,180,170],strike:45,dipHelp:"Steep to near-vertical strike-slip plane.",rakeHelp:"Right-lateral strike-slip convention near 180°."},
-      leftStrike:{name:"Left-lateral strike-slip",short:"Left slip",motion:"Lateral shear",dip:[70,90,82],rake:[-20,20,0],strike:45,dipHelp:"Steep to near-vertical strike-slip plane.",rakeHelp:"Left-lateral strike-slip convention near 0°."},
-      normal:{name:"Normal fault",short:"Normal",motion:"Extension",dip:[45,75,60],rake:[-120,-60,-90],strike:315,dipHelp:"Moderate to steep normal fault dip.",rakeHelp:"Negative rake means down-dip normal movement."},
-      reverse:{name:"Reverse / thrust fault",short:"Reverse",motion:"Compression",dip:[10,45,30],rake:[60,120,90],strike:35,dipHelp:"Low to moderate dip for thrust/reverse faulting.",rakeHelp:"Positive rake means up-dip reverse movement."},
-      obliqueNormal:{name:"Oblique normal fault",short:"Oblique N",motion:"Extension + shear",dip:[35,75,58],rake:[-150,-35,-115],strike:300,dipHelp:"Normal movement plus a strike-slip component.",rakeHelp:"Negative oblique rake mixes normal and lateral slip."},
-      obliqueReverse:{name:"Oblique reverse fault",short:"Oblique R",motion:"Compression + shear",dip:[15,60,42],rake:[35,150,115],strike:120,dipHelp:"Reverse movement plus a strike-slip component.",rakeHelp:"Positive oblique rake mixes reverse and lateral slip."}
-    },
-    learning:{
-      rightStrike:{name:"Right-lateral strike-slip",short:"Right slip",motion:"Lateral shear",dip:[55,90,78],rake:[130,180,170],strike:45,dipHelp:"Wider learning range, still generally steep.",rakeHelp:"Explore how right-lateral slip approaches oblique motion."},
-      leftStrike:{name:"Left-lateral strike-slip",short:"Left slip",motion:"Lateral shear",dip:[55,90,78],rake:[-45,45,0],strike:45,dipHelp:"Wider learning range, still generally steep.",rakeHelp:"Explore how left-lateral slip approaches oblique motion."},
-      normal:{name:"Normal fault",short:"Normal",motion:"Extension",dip:[30,85,60],rake:[-160,-30,-90],strike:315,dipHelp:"Wider learning range for normal to oblique-normal faults.",rakeHelp:"More negative values show stronger dip-slip / normal movement."},
-      reverse:{name:"Reverse / thrust fault",short:"Reverse",motion:"Compression",dip:[5,60,30],rake:[30,160,90],strike:35,dipHelp:"Wider learning range from shallow thrust to steeper reverse.",rakeHelp:"Positive values show up-dip / reverse movement."},
-      obliqueNormal:{name:"Oblique normal fault",short:"Oblique N",motion:"Extension + shear",dip:[25,85,58],rake:[-170,-20,-115],strike:300,dipHelp:"Explore the transition from normal to strike-slip.",rakeHelp:"Negative oblique rake combines extension and shear."},
-      obliqueReverse:{name:"Oblique reverse fault",short:"Oblique R",motion:"Compression + shear",dip:[5,70,42],rake:[20,170,115],strike:120,dipHelp:"Explore the transition from reverse to strike-slip.",rakeHelp:"Positive oblique rake combines compression and shear."}
-    }
-  };
-
-  function pad3(n){ n=Math.round(Number(n)); return n<0 ? "−"+String(Math.abs(n)).padStart(3,"0") : String(n).padStart(3,"0"); }
-  function degToRad(d){ return d*Math.PI/180; }
-  function pos360(n){ return ((n%360)+360)%360; }
-  function clampToRange(el){ const v=Number(el.value), mn=Number(el.min), mx=Number(el.max); el.value=Math.min(mx,Math.max(mn,v)); }
-
-  window.setPreset = function(key){ mechanismEl.value = key; applyMechanism(true); };
-
-  function setMode(next){
-    mode = next;
-    strictBtn.classList.toggle("active", mode === "strict");
-    learnBtn.classList.toggle("active", mode === "learning");
-    applyMechanism(false);
-  }
-  strictBtn.addEventListener("click", function(){ setMode("strict"); });
-  learnBtn.addEventListener("click", function(){ setMode("learning"); });
-
-  function applyMechanism(reset){
-    const p = config[mode][mechanismEl.value];
-    const oldDip = Number(dipEl.value), oldRake = Number(rakeEl.value);
-    dipEl.min = p.dip[0]; dipEl.max = p.dip[1];
-    rakeEl.min = p.rake[0]; rakeEl.max = p.rake[1];
-    if(reset){
-      strikeEl.value = p.strike;
-      dipEl.value = p.dip[2];
-      rakeEl.value = p.rake[2];
-    }else{
-      dipEl.value = Math.min(p.dip[1], Math.max(p.dip[0], oldDip || p.dip[2]));
-      rakeEl.value = Math.min(p.rake[1], Math.max(p.rake[0], oldRake || p.rake[2]));
-    }
-    dipMin.textContent = p.dip[0] + "°";
-    dipMax.textContent = p.dip[1] + "°";
-    rakeMin.textContent = pad3(p.rake[0]) + "°";
-    rakeMax.textContent = pad3(p.rake[1]) + "°";
-    dipHelp.textContent = p.dipHelp;
-    rakeHelp.textContent = p.rakeHelp;
-    updateScene();
-    if(typeof refreshCompareActive === "function"){
-      try{ refreshCompareActive(); }catch(e){ /* comparison panel not built yet */ }
-    }
-  }
-
-  const canvas = document.getElementById("viewer");
-  const renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = false;
-
-  const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xeef2fa, 13, 24);
-
-  const camera = new THREE.PerspectiveCamera(42, 1, .1, 100);
-  camera.position.set(6.4, 5.3, 7.7);
-
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, -.55, 0);
-  controls.enableDamping = true;
-  controls.dampingFactor = .07;
-  controls.minDistance = 5.0;
-  controls.maxDistance = 13.5;
-  controls.maxPolarAngle = Math.PI * .49;
-
-  const ambient = new THREE.AmbientLight(0xffffff, .92);
-  scene.add(ambient);
-
-  const key = new THREE.DirectionalLight(0xffffff, 1.65);
-  key.position.set(6, 9, 6);
-  scene.add(key);
-
-  const rim = new THREE.DirectionalLight(0xbfd4ff, .55);
-  rim.position.set(-8, 5, -6);
-  scene.add(rim);
-
-  const fill = new THREE.DirectionalLight(0xffffff, .4);
-  fill.position.set(0, 4, 8);
-  scene.add(fill);
-
-  let grid = new THREE.GridHelper(17, 26, 0xd6dded, 0xe5e9f3);
-  grid.position.y = -2.70;
-  scene.add(grid);
-
-  const system = new THREE.Group();
-  scene.add(system);
-
-  function makeStrataTexture(topColor, body1, body2){
-    const c = document.createElement("canvas");
-    c.width = 512; c.height = 256;
-    const x = c.getContext("2d");
-    x.fillStyle = "#" + topColor.toString(16).padStart(6,"0");
-    x.fillRect(0,0,512,38);
-    const grad = x.createLinearGradient(0,38,0,256);
-    grad.addColorStop(0, "#" + body1.toString(16).padStart(6,"0"));
-    grad.addColorStop(1, "#" + body2.toString(16).padStart(6,"0"));
-    x.fillStyle = grad;
-    x.fillRect(0,38,512,218);
-    x.strokeStyle = "rgba(20,24,34,.16)";
-    x.lineWidth = 5;
-    [58,84,116,148,185,218].forEach(y => {
-      x.beginPath();
-      x.moveTo(0,y);
-      x.bezierCurveTo(110,y-8,210,y+10,330,y-4);
-      x.bezierCurveTo(420,y-14,470,y+10,512,y);
-      x.stroke();
-    });
-    const tex = new THREE.CanvasTexture(c);
-    tex.needsUpdate = true;
-    return tex;
-  }
-
-  function addOutline(mesh, color, opacity){
-    const edges = new THREE.EdgesGeometry(mesh.geometry);
-    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color:color, transparent:true, opacity:opacity}));
-    line.position.copy(mesh.position);
-    line.rotation.copy(mesh.rotation);
-    mesh.parent.add(line);
-    return line;
-  }
-
-  function makePlate(z, topColor, side1, side2){
-    const g = new THREE.Group();
-
-    const tex = makeStrataTexture(topColor, side1, side2);
-    const bodyMat = new THREE.MeshStandardMaterial({map:tex, roughness:.86, metalness:0});
-    const topMat = new THREE.MeshStandardMaterial({color:topColor, roughness:.8, metalness:0});
-
-    const body = new THREE.Mesh(new THREE.BoxGeometry(5.2, .64, 2.2), bodyMat);
-    body.position.set(0, -.28, z);
-    g.add(body);
-
-    const top = new THREE.Mesh(new THREE.BoxGeometry(5.24, .07, 2.24), topMat);
-    top.position.set(0, .09, z);
-    g.add(top);
-
-    addOutline(body, 0x10172a, .22);
-    addOutline(top, 0x10172a, .30);
-    return g;
-  }
-
-  const footwall = makePlate(-1.50, 0x8fa6c2, 0x6c84a3, 0x4d6480);
-  const hangingwall = makePlate(1.50, 0xe2895c, 0xcf6f3e, 0xa8552c);
-  system.add(footwall, hangingwall);
-
-  function addBlockLabel(text, color, x, z){
-    const label = makeTextSprite(text, color, 64);
-    label.position.set(x, .26, z);
-    label.scale.set(1.3, .34, 1);
-    system.add(label);
-  }
-  addBlockLabel("Footwall", "#2f4b6e", 1.95, -2.05);
-  addBlockLabel("Hanging wall", "#7a3818", 1.95, 2.05);
-
-  const gap = new THREE.Mesh(
-    new THREE.BoxGeometry(5.28, .04, .66),
-    new THREE.MeshStandardMaterial({color:0xe2a112, roughness:.5, emissive:0xe2a112, emissiveIntensity:.18, transparent:true, opacity:.78})
-  );
-  gap.position.set(0, .16, 0);
-  system.add(gap);
-
-  let active = [];
-  function clearActive(){
-    active.forEach(o => o.parent && o.parent.remove(o));
-    active = [];
-  }
-  function add(obj, parent=system){
-    parent.add(obj);
-    active.push(obj);
-    return obj;
-  }
-
-  function arrowBetween(start, end, color, shaftRadius=.045, headRadius=.16, headLen=.34){
-    const g = new THREE.Group();
-    const mat = new THREE.MeshStandardMaterial({
-      color:color,
-      roughness:.30,
-      metalness:.08,
-      emissive:color,
-      emissiveIntensity:.16
-    });
-    const dir = new THREE.Vector3().subVectors(end, start);
-    const len = dir.length();
-    const head = Math.min(headLen, len * .42);
-    const shaftLen = Math.max(.02, len - head);
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(shaftRadius, shaftRadius, shaftLen, 24), mat);
-    const cone = new THREE.Mesh(new THREE.ConeGeometry(headRadius, head, 30), mat);
-    shaft.position.y = shaftLen/2;
-    cone.position.y = shaftLen + head/2;
-    
-    g.add(shaft, cone);
-    g.position.copy(start);
-    g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
-    return g;
-  }
-
-  function makeTextSprite(text, color, size, weight){
-    const c = document.createElement("canvas");
-    c.width = 1024; c.height = 320;
-    const ctx = c.getContext("2d");
-    const tex = new THREE.CanvasTexture(c);
-    const mat = new THREE.SpriteMaterial({map:tex, transparent:true, depthTest:false});
-    const sp = new THREE.Sprite(mat);
-    sp.userData = {canvas:c, ctx:ctx, tex:tex, color:color, size:size, weight:weight || 800};
-    sp.scale.set(1.7, .53, 1);
-    updateText(sp, text);
-    return sp;
-  }
-
-  function updateText(sp, text){
-    const d = sp.userData, c = d.canvas, ctx = d.ctx;
-    ctx.clearRect(0,0,c.width,c.height);
-
-    ctx.font = d.weight + " " + d.size + "px 'Space Grotesk', Inter, Arial, sans-serif";
-    const metrics = ctx.measureText(text);
-    const padX = 46;
-    const h = 196, y = (c.height - h) / 2;
-    const boxW = Math.min(c.width - 20, Math.max(220, metrics.width + padX * 2));
-    const x0 = (c.width - boxW) / 2;
-    const radius = 30;
-
-    ctx.beginPath();
-    ctx.moveTo(x0 + radius, y);
-    ctx.lineTo(x0 + boxW - radius, y);
-    ctx.quadraticCurveTo(x0 + boxW, y, x0 + boxW, y + radius);
-    ctx.lineTo(x0 + boxW, y + h - radius);
-    ctx.quadraticCurveTo(x0 + boxW, y + h, x0 + boxW - radius, y + h);
-    ctx.lineTo(x0 + radius, y + h);
-    ctx.quadraticCurveTo(x0, y + h, x0, y + h - radius);
-    ctx.lineTo(x0, y + radius);
-    ctx.quadraticCurveTo(x0, y, x0 + radius, y);
-    ctx.closePath();
-    ctx.fillStyle = "rgba(255,255,255,.97)";
-    ctx.fill();
-    ctx.strokeStyle = d.color;
-    ctx.lineWidth = 5;
-    ctx.globalAlpha = .55;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = d.color;
-    ctx.fillText(text, c.width/2, y + h/2 + 4);
-
-    d.tex.needsUpdate = true;
-  }
-
-  function addNorth(){
-    const arrow = arrowBetween(new THREE.Vector3(-3.35, .50, -2.75), new THREE.Vector3(-3.35, .50, -1.55), 0x10172a, .024, .09);
-    scene.add(arrow);
-    const label = makeTextSprite("North", "#10172a", 70);
-    label.position.set(-3.35, .80, -1.18);
-    label.scale.set(.95, .26, 1);
-    scene.add(label);
-  }
-  addNorth();
-
-  function updateScene(){
-    clampToRange(dipEl);
-    clampToRange(rakeEl);
-
-    const p = config[mode][mechanismEl.value];
-    const s = Number(strikeEl.value);
-    const d = Number(dipEl.value);
-    const r = Number(rakeEl.value);
-
-    strikeVal.textContent = pad3(s);
-    dipVal.textContent = String(Math.round(d)).padStart(2,"0");
-    rakeVal.textContent = pad3(r);
-
-    system.rotation.y = -degToRad(s);
-    clearActive();
-
-    const dipRad = degToRad(d);
-    const L = 3.25;
-    const topY = .30, topZ = 0;
-    const bottomY = topY - L * Math.sin(dipRad);
-    const bottomZ = topZ + L * Math.cos(dipRad);
-    const halfW = 2.50;
-
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute("position", new THREE.BufferAttribute(new Float32Array([
-      -halfW, topY, topZ,
-       halfW, topY, topZ,
-       halfW, bottomY, bottomZ,
-      -halfW, bottomY, bottomZ
-    ]), 3));
-    geom.setIndex([0,1,2,0,2,3]);
-    geom.computeVertexNormals();
-
-    const plane = new THREE.Mesh(geom, new THREE.MeshStandardMaterial({
-      color:0xf7f9fd,
-      roughness:.4,
-      metalness:0,
-      transparent:true,
-      opacity:.92,
-      side:THREE.DoubleSide
-    }));
-    
-    add(plane);
-    add(new THREE.LineSegments(new THREE.EdgesGeometry(geom), new THREE.LineBasicMaterial({color:0x10172a, transparent:true, opacity:.30})));
-
-    const rakeRad = degToRad(r);
-    const strikeDir = new THREE.Vector3(1,0,0);
-    const upDipDir = new THREE.Vector3(0, Math.sin(dipRad), -Math.cos(dipRad));
-    const slipDir = new THREE.Vector3()
-      .addScaledVector(strikeDir, Math.cos(rakeRad))
-      .addScaledVector(upDipDir, Math.sin(rakeRad))
-      .normalize();
-
-    currentSlipDir = slipDir.clone();
-    hangingwall.position.copy(slipDir.clone().multiplyScalar(.22));
-
-    // Point on the fault plane: xFrac in [-1,1] across strike, tFrac in [0,1] from top edge to bottom edge.
-    function planePoint(xFrac, tFrac){
-      return new THREE.Vector3(
-        xFrac * halfW,
-        topY - tFrac * L * Math.sin(dipRad),
-        topZ + tFrac * L * Math.cos(dipRad)
-      );
-    }
-    // Lift a point slightly off the plane surface, toward the viewer, so arrows read clearly.
-    function lift(pt, amount){
-      return pt.clone().add(new THREE.Vector3(0, Math.cos(dipRad) * amount, Math.sin(dipRad) * amount));
-    }
-
-    const planeCenter = planePoint(0, .5);
-
-    const strikeP0 = lift(planePoint(-.80, 0), .09);
-    const strikeP1 = lift(planePoint(.80, 0), .09);
-    const dipP0 = lift(planePoint(-.92, .14), .09);
-    const dipP1 = lift(planePoint(-.92, .86), .09);
-
-    const slipCenter = lift(planeCenter, .20);
-    const slipStart = slipCenter.clone().addScaledVector(slipDir, -.85);
-    const slipEnd = slipCenter.clone().addScaledVector(slipDir, .85);
-
-    const rakeCenter = lift(planePoint(.62, .68), .14);
-    const rakeStart = rakeCenter.clone().addScaledVector(slipDir, -.45);
-    const rakeEnd = rakeCenter.clone().addScaledVector(slipDir, .45);
-
-    const strikeArrow = arrowBetween(strikeP0, strikeP1, 0x2b6df0, .05, .15, .32);
-    const dipArrow = arrowBetween(dipP0, dipP1, 0x0fa66e, .05, .15, .32);
-    const slipArrow = arrowBetween(slipStart, slipEnd, 0xe8493c, .065, .20, .40);
-    const rakeArrow = arrowBetween(rakeStart, rakeEnd, 0x8b3df0, .045, .14, .28);
-
-    add(strikeArrow); add(dipArrow); add(slipArrow); add(rakeArrow);
-
-    let t;
-    t = makeTextSprite("Strike " + pad3(s) + "°", "#2b6df0", 86);
-    t.position.copy(lift(planePoint(0, 0), .55));
-    t.scale.set(1.86, .42, 1);
-    add(t);
-
-    t = makeTextSprite("Dip " + Math.round(d) + "°", "#0fa66e", 86);
-    t.position.copy(lift(planePoint(-.92, .5), .55));
-    t.scale.set(1.6, .42, 1);
-    add(t);
-
-    t = makeTextSprite("Slip vector", "#e8493c", 80);
-    t.position.copy(slipEnd.clone().addScaledVector(slipDir, .55));
-    t.scale.set(1.78, .40, 1);
-    add(t);
-
-    t = makeTextSprite("Rake " + pad3(r) + "°", "#8b3df0", 78);
-    t.position.copy(rakeEnd.clone().addScaledVector(slipDir, .55));
-    t.scale.set(1.7, .38, 1);
-    add(t);
-
-    const dipDir = pos360(s + 90);
-    formatText.textContent = pad3(s) + "° / " + Math.round(d) + "° / " + pad3(r) + "°";
-    sentence.innerHTML = "Strike <strong>" + pad3(s) + "°</strong>, dip <strong>" + Math.round(d) + "°</strong>, rake <strong>" + pad3(r) + "°</strong>. Dip direction <strong>" + pad3(dipDir) + "°</strong>. " + p.name + ".";
-    mechLabel.textContent = p.name;
-    motionLabel.textContent = p.motion;
-    kpiStrike.textContent = pad3(s) + "°";
-    kpiDipDir.textContent = pad3(dipDir) + "°";
-    kpiStyle.textContent = p.short;
-
-    const eyeRot1 = s + r * .34;
-    const eyeRot2 = s + 90 - r * .23;
-    const thin = Math.max(13, 45 - d * .30);
-    eye1.setAttribute("transform", "rotate(" + eyeRot1 + " 115 115)");
-    eye2.setAttribute("transform", "rotate(" + eyeRot2 + " 115 115)");
-    eyeTint.setAttribute("transform", "rotate(" + eyeRot1 + " 115 115)");
-    eye1.setAttribute("ry", thin.toFixed(1));
-    eye2.setAttribute("ry", (thin*.82).toFixed(1));
-  }
-
-  function resize(){
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const h = window.innerWidth < 680 ? 520 : 680;
-    renderer.setSize(rect.width, h, false);
-    camera.aspect = rect.width / h;
-    camera.updateProjectionMatrix();
-  }
-
-  mechanismEl.addEventListener("change", function(){ applyMechanism(true); });
-  [strikeEl, dipEl, rakeEl].forEach(el => el.addEventListener("input", function(){
-    if(playing) setPlaying(false);
-    updateScene();
-  }));
-
-  window.addEventListener("resize", resize);
-
-  let playing = false;
-  let currentSlipDir = new THREE.Vector3(1,0,0);
-  const playClock = new THREE.Clock(false);
-  const playBtn = document.getElementById("playBtn");
-  const playLabel = document.getElementById("playLabel");
-  const playIcon = document.getElementById("playIcon");
-  const ICON_PLAY = '<path d="M6 4l15 8-15 8z" fill="currentColor"/>';
-  const ICON_PAUSE = '<path d="M5 3h5v18H5zM14 3h5v18h-5z" fill="currentColor"/>';
-
-  function setPlaying(next){
-    playing = next;
-    playBtn.classList.toggle("playing", playing);
-    playLabel.textContent = playing ? "Pause" : "Play slip motion";
-    playIcon.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
-    if(playing){ playClock.start(); } else { playClock.stop(); updateScene(); }
-  }
-  playBtn.addEventListener("click", function(){ setPlaying(!playing); });
-
-  applyMechanism(true);
-  resize();
-  loading.style.display = "none";
-  const copyYearEl = document.getElementById("copyYear");
-  if(copyYearEl) copyYearEl.textContent = new Date().getFullYear();
-
-  // ---------- page navigation ----------
-  const tab1 = document.getElementById("tab1");
-  const tab2 = document.getElementById("tab2");
-  const page1 = document.getElementById("page1");
-  const page2 = document.getElementById("page2");
-
-  function showPage(n){
-    const isP1 = n === 1;
-    tab1.classList.toggle("active", isP1);
-    tab2.classList.toggle("active", !isP1);
-    page1.classList.toggle("active", isP1);
-    page2.classList.toggle("active", !isP1);
-    // Resize both canvases when switching, since they may have been hidden during layout
-    if(!isP1){ setTimeout(function(){ resize3(); }, 30); }
-    else { setTimeout(function(){ resize(); }, 30); }
-  }
-  tab1.addEventListener("click", function(){ showPage(1); });
-  tab2.addEventListener("click", function(){ showPage(2); });
-
   // ---------- theme ----------
   const root = document.documentElement;
   const themeToggle = document.getElementById("themeToggle");
@@ -2506,189 +1810,33 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
   const themeIcon = document.getElementById("themeIcon");
   const MOON = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" fill="currentColor"/>';
   const SUN = '<circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
+  let globeReady = false;
 
-  function applyThreeTheme(isDark){
-    scene.fog.color.set(isDark ? 0x10141c : 0xeef2fa);
-    scene.remove(grid);
-    grid.geometry.dispose();
-    grid.material.dispose();
-    grid = new THREE.GridHelper(17, 26, isDark ? 0x2c3543 : 0xd6dded, isDark ? 0x1c222c : 0xe5e9f3);
-    grid.position.y = -2.70;
-    scene.add(grid);
-    ambient.intensity = isDark ? .62 : .92;
-    key.intensity = isDark ? 1.25 : 1.65;
-    try{
-      scene3.fog.color.set(isDark ? 0x10141c : 0xeef2fa);
-      if(activeMapStyle !== "satellite") applyMapStyle(activeMapStyle);
-      ambient3.intensity = isDark ? .8 : 1.0;
-    }catch(e){ /* globe not built yet, will pick up theme when it is */ }
+  function applyGlobeTheme(isDark){
+    renderer3.toneMappingExposure = isDark ? 1.0 : 1.1;
+    scene3.fog.color.set(isDark ? 0x10141c : 0xeef2fa);
+    ambient3.intensity = isDark ? .8 : 1.0;
+    key3.intensity = isDark ? 1.25 : 1.5;
+    fill3.intensity = isDark ? .42 : .5;
+    rim3.intensity = isDark ? .62 : .7;
+    applyMapStyle(activeMapStyle);
   }
+
   function setTheme(theme){
     const isDark = theme === "dark";
     root.dataset.theme = isDark ? "dark" : "light";
     themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
     themeIcon.innerHTML = isDark ? SUN : MOON;
-    applyThreeTheme(isDark);
+    if(globeReady) applyGlobeTheme(isDark);
   }
+
   const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   setTheme(prefersDark ? "dark" : "light");
   themeToggle.addEventListener("click", function(){
     setTheme(root.dataset.theme === "dark" ? "light" : "dark");
   });
 
-  // ---------- onboarding ----------
-  const onboarding = document.getElementById("onboarding");
-  const onboardingBtn = document.getElementById("onboardingBtn");
-  setTimeout(function(){ onboarding.classList.remove("hidden"); }, 350);
-  onboardingBtn.addEventListener("click", function(){ onboarding.classList.add("hidden"); });
-
-  // ---------- camera presets ----------
-  const ISO_POS = new THREE.Vector3(6.4, 5.3, 7.7);
-  const TOP_POS = new THREE.Vector3(0.4, 10.6, 0.6);
-  const SIDE_POS = new THREE.Vector3(10.6, 1.3, 0.15);
-  const CAM_TARGET = new THREE.Vector3(0, -.55, 0);
-  const camButtons = {iso: document.getElementById("camIso"), top: document.getElementById("camTop"), side: document.getElementById("camSide")};
-  let camTween = null;
-
-  function flyTo(pos, key){
-    camTween = { from: camera.position.clone(), to: pos.clone(), t0: performance.now(), dur: 700 };
-    Object.keys(camButtons).forEach(k => camButtons[k].classList.toggle("active", k === key));
-  }
-  camButtons.iso.addEventListener("click", function(){ flyTo(ISO_POS, "iso"); });
-  camButtons.top.addEventListener("click", function(){ flyTo(TOP_POS, "top"); });
-  camButtons.side.addEventListener("click", function(){ flyTo(SIDE_POS, "side"); });
-
   function easeInOutCubic(x){ return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; }
-
-  // ---------- copy / share ----------
-  const copyValuesBtn = document.getElementById("copyValuesBtn");
-  const copyLinkBtn = document.getElementById("copyLinkBtn");
-
-  function flashCopied(btn, label){
-    const original = btn.textContent;
-    btn.textContent = label || "Copied";
-    btn.classList.add("copied");
-    setTimeout(function(){ btn.textContent = original; btn.classList.remove("copied"); }, 1400);
-  }
-  function copyText(text, btn, label){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(function(){ flashCopied(btn, label); }).catch(function(){ flashCopied(btn, "Select & copy"); });
-    }else{
-      flashCopied(btn, "Select & copy");
-    }
-  }
-  copyValuesBtn.addEventListener("click", function(){
-    const p = config[mode][mechanismEl.value];
-    const text = formatText.textContent + "  (" + p.name + ")";
-    copyText(text, copyValuesBtn, "Copied!");
-  });
-  copyLinkBtn.addEventListener("click", function(){
-    const params = new URLSearchParams({
-      mechanism: mechanismEl.value,
-      mode: mode,
-      strike: strikeEl.value,
-      dip: dipEl.value,
-      rake: rakeEl.value
-    });
-    const url = location.href.split("?")[0] + "?" + params.toString();
-    copyText(url, copyLinkBtn, "Link copied!");
-  });
-
-  // Restore a configuration from the URL, if one was shared.
-  (function restoreFromURL(){
-    const q = new URLSearchParams(location.search);
-    if(!q.has("mechanism")) return;
-    if(config[mode][q.get("mechanism")]) mechanismEl.value = q.get("mechanism");
-    if(q.get("mode") === "learning") setMode("learning"); else applyMechanism(true);
-    if(q.has("strike")) strikeEl.value = q.get("strike");
-    if(q.has("dip")) dipEl.value = q.get("dip");
-    if(q.has("rake")) rakeEl.value = q.get("rake");
-    updateScene();
-  })();
-
-  // ---------- comparison panel ----------
-  const compareToggle = document.getElementById("compareToggle");
-  const compareCard = document.getElementById("compareCard");
-  const comparePanel = document.getElementById("comparePanel");
-
-  const MECH_ORDER = ["rightStrike","leftStrike","normal","reverse","obliqueNormal","obliqueReverse"];
-
-  function miniThumb(key){
-    const isStrike = key === "rightStrike" || key === "leftStrike";
-    const right = key === "rightStrike";
-    const reverseLike = key === "reverse" || key === "obliqueReverse";
-    const oblique = key.startsWith("oblique");
-    const fw = "#6c84a3", hw = "#cf6f3e", ink = "#10172a";
-
-    if(isStrike){
-      // plan view: fault splits the block lengthwise, arrows show lateral shear
-      const ax1 = right ? 102 : 58, ax2 = right ? 58 : 102;
-      return '<svg viewBox="0 0 160 100">' +
-        '<rect x="9" y="38" width="142" height="24" rx="5" fill="' + fw + '" opacity=".9"/>' +
-        '<line x1="9" y1="50" x2="151" y2="50" stroke="' + ink + '" stroke-width="1.5" stroke-dasharray="4 4" opacity=".4"/>' +
-        '<g class="thumb-arrow"><path d="M30 36 L' + ax1 + ' 36" stroke="' + hw + '" stroke-width="4.5" fill="none" stroke-linecap="round" marker-end="url(#a' + key + ')"/></g>' +
-        '<g class="thumb-arrow" style="animation-delay:.35s"><path d="M130 64 L' + ax2 + ' 64" stroke="' + ink + '" stroke-width="4.5" fill="none" stroke-linecap="round" marker-end="url(#b' + key + ')"/></g>' +
-        '<defs><marker id="a' + key + '" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="' + hw + '"/></marker>' +
-        '<marker id="b' + key + '" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="' + ink + '"/></marker></defs>' +
-        '</svg>';
-    }
-
-    // cross-section view: inclined fault, arrow shows up-dip (reverse) or down-dip (normal) motion
-    const dipDeg = reverseLike ? 28 : 58;
-    const rad = dipDeg * Math.PI/180;
-    const topX = 80, topY = 20;
-    const runX = 58 * Math.cos(rad), runY = 58 * Math.sin(rad);
-    const botX = topX + runX, botY = topY + runY;
-    const arrowMidX = (topX+botX)/2, arrowMidY = (topY+botY)/2;
-    const along = reverseLike ? -1 : 1;
-    const ax = arrowMidX - along * 17 * Math.cos(rad);
-    const ay = arrowMidY - along * 17 * Math.sin(rad);
-    const bx = arrowMidX + along * 17 * Math.cos(rad);
-    const by = arrowMidY + along * 17 * Math.sin(rad);
-    const obliqueNote = oblique ? '<text x="80" y="93" text-anchor="middle" font-size="9" font-weight="700" fill="#8b3df0">+ lateral shear</text>' : '';
-
-    return '<svg viewBox="0 0 160 100">' +
-      '<polygon points="8,20 ' + topX + ',' + topY + ' ' + botX + ',' + botY + ' 8,80" fill="' + fw + '" opacity=".88"/>' +
-      '<polygon points="' + topX + ',' + topY + ' 152,20 152,80 ' + botX + ',' + botY + '" fill="' + hw + '" opacity=".88"/>' +
-      '<line x1="' + topX + '" y1="' + topY + '" x2="' + botX + '" y2="' + botY + '" stroke="' + ink + '" stroke-width="2" opacity=".55"/>' +
-      '<g class="thumb-arrow"><path d="M' + ax.toFixed(1) + ' ' + ay.toFixed(1) + ' L' + bx.toFixed(1) + ' ' + by.toFixed(1) + '" stroke="' + ink + '" stroke-width="4.5" fill="none" stroke-linecap="round" marker-end="url(#m' + key + ')"/></g>' +
-      '<defs><marker id="m' + key + '" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="' + ink + '"/></marker></defs>' +
-      obliqueNote +
-      '</svg>';
-  }
-
-  function buildComparePanel(){
-    comparePanel.innerHTML = "";
-    MECH_ORDER.forEach(function(key){
-      const p = config.strict[key];
-      const card = document.createElement("div");
-      card.className = "compare-card";
-      card.dataset.key = key;
-      card.innerHTML = miniThumb(key) +
-        '<div class="name">' + p.name + '</div>' +
-        '<div class="desc">Dip ' + p.dip[0] + '\u2013' + p.dip[1] + '\u00b0 \u00b7 Rake ' + p.rake[0] + '\u2013' + p.rake[1] + '\u00b0</div>';
-      card.addEventListener("click", function(){
-        mechanismEl.value = key;
-        if(mode !== "strict") setMode("strict"); else applyMechanism(true);
-      });
-      comparePanel.appendChild(card);
-    });
-    refreshCompareActive();
-  }
-  function refreshCompareActive(){
-    Array.from(comparePanel.children).forEach(function(card){
-      card.classList.toggle("active", card.dataset.key === mechanismEl.value);
-    });
-  }
-  buildComparePanel();
-
-  compareToggle.addEventListener("click", function(){
-    const open = compareCard.style.display === "none";
-    compareCard.style.display = open ? "block" : "none";
-    compareToggle.classList.toggle("open", open);
-    compareToggle.querySelector("span").textContent = open ? "Hide comparison" : "Compare all six mechanisms";
-    if(open) compareCard.scrollIntoView({behavior:"smooth", block:"nearest"});
-  });
 
   // ---------- globe of major world faults ----------
   const FAULTS = [
@@ -3381,6 +2529,7 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
   let quakeDataReferenceTime = Date.now();
   let quakeSourceLabel = "Snapshot data";
   let quakeUpdatedLabel = QUAKE_SNAPSHOT_DATE;
+  let liveFetchFailed = false;
   const quakeLabelsEl = document.getElementById("quakeLabels");
   const quakeLegendEl = document.getElementById("quakeLegend");
 
@@ -3474,7 +2623,10 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
     quakeGroup.visible = quakeFeedOn && layerVisibility.earthquakes;
     quakeLegendEl.style.display = quakeFeedOn && layerVisibility.earthquakes ? "flex" : "none";
     const periodLabel = quakeTimeWindowDays === 1 ? "past 24 hours" : "past " + quakeTimeWindowDays + " days";
-    setQuakeStatus(quakeSourceLabel + " · " + visibleCount + " shown of " + quakeMarkers.length + " · " + periodLabel + " · M" + quakeMinMagnitude.toFixed(1) + "+ · updated " + quakeUpdatedLabel, quakeSourceLabel === "Live feed" ? "live" : "");
+    const statusText = liveFetchFailed
+      ? "Live earthquake data unavailable — showing snapshot data. · " + visibleCount + " shown of " + quakeMarkers.length
+      : quakeSourceLabel + " · " + visibleCount + " shown of " + quakeMarkers.length + " · " + periodLabel + " · M" + quakeMinMagnitude.toFixed(1) + "+ · updated " + quakeUpdatedLabel;
+    setQuakeStatus(statusText, liveFetchFailed ? "error" : (quakeSourceLabel === "Live feed" ? "live" : ""));
     if(selectedQuake && !selectedQuake.filteredVisible) showFaultInfo(FAULTS[0]);
   }
 
@@ -3505,7 +2657,8 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
         applyQuakeFilters();
       })
       .catch(function(){
-        // live fetch failed — keep showing the snapshot, no error shown since snapshot data is valid
+        liveFetchFailed = true;
+        loadSnapshotData();
       });
   }
 
@@ -3584,9 +2737,8 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
   }
   window.addEventListener("resize", resize3);
   resize3();
-  if(typeof root !== "undefined" && root.dataset.theme){
-    applyThreeTheme(root.dataset.theme === "dark");
-  }
+  globeReady = true;
+  applyGlobeTheme(root.dataset.theme === "dark");
 
   function animate3(){
     controls3.update();
@@ -3683,27 +2835,7 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
   }
   animate3();
 
-  function animate(){
-    controls.update();
-    if(camTween){
 
-      const e = Math.min(1, (performance.now() - camTween.t0) / camTween.dur);
-      camera.position.lerpVectors(camTween.from, camTween.to, easeInOutCubic(e));
-      controls.target.copy(CAM_TARGET);
-      if(e >= 1) camTween = null;
-    }
-    if(playing){
-      // Slow back-and-forth slide along the current slip vector: this is the
-      // same direction the rake angle points along, made visible as motion.
-      const t = playClock.getElapsedTime();
-      const swing = (Math.sin(t * 1.7 - Math.PI/2) + 1) / 2; // eases 0 -> 1 -> 0
-      const offset = .03 + swing * .78;
-      hangingwall.position.copy(currentSlipDir.clone().multiplyScalar(offset));
-    }
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
-  animate();
 })();
 </script>
 
