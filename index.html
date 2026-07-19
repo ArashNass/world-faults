@@ -1415,23 +1415,24 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 }
 .fault-search-icon{
   position:absolute;
-  left:11px;
+  left:12px;
   top:50%;
   transform:translateY(-50%);
-  color:var(--ink-faint);
-  font-size:13px;
+  color:var(--ink-soft);
+  display:flex;
   pointer-events:none;
 }
 .fault-search{
   width:100%;
   box-sizing:border-box;
-  border:1px solid var(--line);
+  border:1.5px solid #c7d2e6;
   border-radius:12px;
-  padding:10px 11px 10px 32px;
+  padding:11px 11px 11px 36px;
   background:#fff;
   color:var(--ink);
-  font:600 12px 'Inter',sans-serif;
+  font:600 12.5px 'Inter',sans-serif;
   outline:none;
+  box-shadow:0 1px 3px rgba(16,23,42,.06);
   transition:border-color .15s ease,box-shadow .15s ease;
 }
 .fault-search:focus{border-color:#7ea9d6;box-shadow:0 0 0 3px rgba(55,119,184,.10)}
@@ -1764,7 +1765,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
         </div>
         <div class="quake-controls" id="quakeControls">
           <div class="fault-search-wrap">
-            <span class="fault-search-icon">⌕</span>
+            <span class="fault-search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
             <input id="faultSearch" class="fault-search" type="search" placeholder="Search named faults or regions" autocomplete="off" aria-label="Search faults">
           </div>
           <div id="faultInfo" class="fault-info"></div>
