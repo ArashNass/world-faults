@@ -57,7 +57,7 @@ h1{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
 .panel h2{font-size:14px;font-weight:700;margin-bottom:2px}
 .panel .panel-note{font-size:11.5px;color:var(--ink-faint);margin-bottom:14px}
-.chart-wrap{position:relative;height:220px}
+.chart-wrap{position:relative;height:250px}
 
 .depth-row{display:flex;gap:10px}
 .depth-card{flex:1;text-align:center;padding:14px 8px;border-radius:10px}
@@ -393,16 +393,22 @@ function renderMagChart(){
     {label:'7+', test:m=>m>=7},
   ];
   const counts = bins.map(b => G.quakes.filter(q=>b.test(q.mag)).length);
-  const colors = ['#2b6df0','#0fa66e','#e2a112','#e8493c','#8b3df0','#10172a'];
+  const colors = ['#8fb8f5','#2b6df0','#e2a112','#e8493c','#b8291b','#6b0f0f'];
 
   if(magChartObj) magChartObj.destroy();
   magChartObj = new Chart($('magChart'), {
     type: 'bar',
-    data: { labels: bins.map(b=>b.label), datasets: [{ data: counts, backgroundColor: colors, borderRadius: 4 }] },
+    data: { labels: bins.map(b=>b.label), datasets: [{ label:'Earthquakes', data: counts, backgroundColor: colors, borderRadius: 4 }] },
     options: {
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{ y:{ beginAtZero:true, ticks:{precision:0} } }
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ title: items => `Magnitude ${items[0].label}`, label: item => `${item.parsed.y.toLocaleString()} earthquake${item.parsed.y===1?'':'s'}` } }
+      },
+      scales:{
+        x:{ title:{ display:true, text:'Magnitude range', font:{size:11,weight:'600'} } },
+        y:{ beginAtZero:true, ticks:{precision:0}, title:{ display:true, text:'Number of earthquakes', font:{size:11,weight:'600'} } }
+      }
     }
   });
 }
@@ -429,11 +435,17 @@ function renderDailyChart(){
   if(dailyChartObj) dailyChartObj.destroy();
   dailyChartObj = new Chart($('dailyChart'), {
     type: 'bar',
-    data: { labels, datasets:[{ data: values, backgroundColor:'#2b6df0', borderRadius:3 }] },
+    data: { labels, datasets:[{ label:'Earthquakes', data: values, backgroundColor:'#2b6df0', borderRadius:3 }] },
     options:{
       responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{ x:{ ticks:{ maxTicksLimit:8, font:{size:10} } }, y:{ beginAtZero:true, ticks:{precision:0} } }
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: item => `${item.parsed.y.toLocaleString()} earthquake${item.parsed.y===1?'':'s'}` } }
+      },
+      scales:{
+        x:{ ticks:{ maxTicksLimit:8, font:{size:10} }, title:{ display:true, text: bucketDays>1 ? `Date, grouped by ${bucketDays}-day period (UTC)` : 'Date (UTC)', font:{size:11,weight:'600'} } },
+        y:{ beginAtZero:true, ticks:{precision:0}, title:{ display:true, text:'Number of earthquakes', font:{size:11,weight:'600'} } }
+      }
     }
   });
 }
