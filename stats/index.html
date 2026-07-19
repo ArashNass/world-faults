@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seismic Statistics — Global Faults &amp; Live Earthquakes</title>
+<meta name="description" content="Live global earthquake statistics: magnitude distribution, daily activity, depth breakdown, active swarms and notable volcanoes, from the free USGS feed.">
+<link rel="canonical" href="https://arashnassirpour.com/world-faults/stats/">
+<meta property="og:title" content="Seismic Statistics — Global Faults &amp; Live Earthquakes">
+<meta property="og:description" content="Live global earthquake statistics: magnitude distribution, daily activity, depth breakdown, active swarms and notable volcanoes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://arashnassirpour.com/world-faults/stats/">
+<meta name="theme-color" content="#0f2350">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f2350'/%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.6 4 5.6 4 9s-1.3 6.4-4 9c-2.7-2.6-4-5.6-4-9s1.3-6.4 4-9z' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f6fb; --paper:#ffffff; --line:#e3e8f2; --ink:#10172a; --ink-soft:#5b6680; --ink-faint:#8e98b3;
+  --accent:#2b6df0; --accent-bg:#eaf1ff; --good:#0fa66e; --good-bg:#e8f8f0;
+  --warn:#e2a112; --warn-bg:#fdf3df; --bad:#e8493c; --bad-bg:#fdeceb; --purple:#8b3df0; --purple-bg:#f3eaff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;max-width:1180px;margin:0 auto;padding:28px 24px 64px;width:100%}
+
+.tabnav{display:flex;gap:6px;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:0}
+.tabnav a{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--ink-soft);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabnav a:hover{color:var(--ink)}
+.tabnav a.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+h1{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.sub{font-size:13.5px;color:var(--ink-soft);margin-bottom:22px}
+.sub b{color:var(--ink);font-weight:600}
+
+.controls{display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:24px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.ctrl-group{display:flex;flex-direction:column;gap:6px}
+.ctrl-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px;gap:2px}
+.seg button{border:none;background:none;padding:6px 13px;font:600 12.5px Inter,sans-serif;color:var(--ink-soft);border-radius:6px;cursor:pointer}
+.seg button.on{background:var(--paper);color:var(--accent);box-shadow:0 1px 3px rgba(16,23,42,.12)}
+.seg button:hover:not(.on){color:var(--ink)}
+
+.status{font-size:12.5px;color:var(--ink-faint);padding:6px 0}
+.status.err{color:var(--bad)}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat-card .label{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+.stat-card .value{font:700 24px/1.1 'JetBrains Mono',monospace;color:var(--ink)}
+.stat-card .value small{font-size:13px;font-weight:500;color:var(--ink-soft);margin-left:3px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.panel h2{font-size:14px;font-weight:700;margin-bottom:2px}
+.panel .panel-note{font-size:11.5px;color:var(--ink-faint);margin-bottom:14px}
+.chart-wrap{position:relative;height:220px}
+
+.depth-row{display:flex;gap:10px}
+.depth-card{flex:1;text-align:center;padding:14px 8px;border-radius:10px}
+.depth-card .n{font:700 22px 'JetBrains Mono',monospace}
+.depth-card .lbl{font-size:11px;color:var(--ink-soft);margin-top:4px}
+.depth-card .range{font-size:10px;color:var(--ink-faint);margin-top:1px}
+
+.swarm-list{display:flex;flex-direction:column;gap:8px}
+.swarm-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--warn-bg);border-radius:8px;gap:10px}
+.swarm-item .loc{font-size:12.5px;font-weight:600;color:var(--ink)}
+.swarm-item .meta{font-size:11px;color:var(--ink-soft)}
+.swarm-item .count{font:700 16px 'JetBrains Mono',monospace;color:var(--warn);white-space:nowrap}
+.empty-note{font-size:12.5px;color:var(--ink-faint);padding:8px 0}
+
+.volc-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:500 13px Inter,sans-serif;background:var(--bg);color:var(--ink);margin-bottom:12px}
+.volc-search:focus{outline:2px solid var(--accent);outline-offset:1px}
+.volc-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.volc-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);padding:6px 10px;border-bottom:1px solid var(--line)}
+.volc-table td{padding:8px 10px;border-bottom:1px solid var(--line)}
+.volc-table tr:hover td{background:var(--bg)}
+.volc-table .near{display:inline-block;font-size:10px;font-weight:700;color:var(--bad);background:var(--bad-bg);padding:2px 7px;border-radius:20px;margin-left:6px}
+.volc-scroll{max-height:340px;overflow-y:auto}
+
+footer.pagefoot{font-size:11.5px;color:var(--ink-faint);text-align:center;padding:20px 24px;border-top:1px solid var(--line);line-height:1.7}
+footer.pagefoot a{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<!-- shared site header injected below -->
+<header class="site-hd"><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+.site-hd{background:#0f2350;border-bottom:1px solid rgba(255,255,255,.08);font-family:Inter,'Segoe UI',system-ui,sans-serif;flex-shrink:0;position:sticky;top:0;z-index:9999;box-shadow:0 4px 20px rgba(6,14,36,.18)}
+.site-hd::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(124,157,255,.55),transparent)}
+.site-hd .hd-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:14px 24px}
+.site-hd a{text-decoration:none;color:#fff;font-size:12.5px;font-weight:500;transition:opacity .15s;opacity:.9}
+.site-hd a:hover{opacity:1}
+.site-hd .hd-home{color:#fff;font-size:13.5px;font-weight:600;opacity:1}
+.site-hd .hd-links{display:flex;align-items:center;gap:16px}
+.site-hd .hd-dd{position:relative}
+.site-hd .hd-dd-btn{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font:500 12.5px Inter,'Segoe UI',system-ui,sans-serif;color:#fff;padding:6px 2px;transition:opacity .15s;opacity:.9}
+.site-hd .hd-dd-btn:hover,.site-hd .hd-dd.open .hd-dd-btn{opacity:1}
+.site-hd .hd-dd-btn.hd-on-btn{color:#9fc0ff;opacity:1}
+.site-hd .hd-dd-btn-ic{width:15px;height:15px;flex-shrink:0}
+.site-hd .hd-dd-btn-ic svg{width:100%;height:100%}
+.site-hd .hd-dd-btn svg.hd-chev{width:10px;height:10px;transition:transform .15s;flex-shrink:0;color:#fff}
+.site-hd .hd-dd.open .hd-dd-btn svg.hd-chev{transform:rotate(180deg)}
+.site-hd .hd-dd-menu{position:fixed;background:#1f3d78;border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.4);width:432px;max-width:calc(100vw - 28px);padding:8px;display:none;grid-template-columns:repeat(3,1fr);gap:3px;z-index:10000}
+.site-hd .hd-dd.open .hd-dd-menu{display:grid}
+.site-hd .hd-dd-menu a{display:flex;flex-direction:row;align-items:center;gap:9px;padding:10px 12px;border-radius:8px;font-size:12px;color:#fff;font-weight:500;text-align:left;line-height:1.3;opacity:.92}.site-hd .hd-dd-cat{grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5);padding:10px 10px 4px;margin-top:6px;border-top:1px solid rgba(255,255,255,.12)}.site-hd .hd-dd-cat:first-child{margin-top:0;padding-top:2px;border-top:0}
+.site-hd .hd-dd-menu a:hover{background:rgba(255,255,255,.1);opacity:1}
+.site-hd .hd-dd-menu a.hd-on{background:rgba(255,255,255,.16);opacity:1}
+.site-hd .hd-dd-menu a .hd-dd-ic{width:17px;height:17px;flex-shrink:0}
+.site-hd .hd-dd-menu a .hd-dd-ic svg{width:100%;height:100%}
+.site-hd .hd-sep{color:rgba(255,255,255,.35);font-size:12px;user-select:none}
+.site-hd .hd-ic{display:inline-flex;color:#fff;opacity:.9}
+.site-hd .hd-ic:hover{opacity:1}
+.site-hd .hd-ic svg{width:17px;height:17px}
+@media(max-width:680px){.site-hd .hd-in{padding:11px 14px}.site-hd .hd-links{gap:12px}.site-hd a,.site-hd .hd-dd-btn{font-size:11.5px}.site-hd .hd-sep{display:none}.site-hd .hd-dd-menu{grid-template-columns:repeat(2,1fr);width:auto;max-width:calc(100vw - 28px)}}
+</style><div class="hd-in"><a class="hd-home" href="/">Home</a><nav class="hd-links"><div class="hd-dd" id="hdDd"><button class="hd-dd-btn" id="hdDdBtn" type="button">Tools<svg class="hd-chev" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="hd-dd-menu"><div class="hd-dd-cat">Earthquake Science</div><a href="/earthquake-rupture/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>Fault Mechanism</a><a class="hd-on" href="/world-faults/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.7 2.6 4 5.6 4 9s-1.3 6.4-4 9c-2.7-2.6-4-5.6-4-9s1.3-6.4 4-9z"/></svg></span>Global Faults & Live Earthquakes</a><a href="/earthquake-dashboard/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-7 5 14 2.5-7h4"/></svg></span>Rapid Earthquake Response</a><div class="hd-dd-cat">Catastrophe Risk</div><a href="/hazus/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M5 18V9l4-4 4 4v9M13 18v-6l3-3 3 3v6"/></svg></span>Vulnerability Explorer</a><div class="hd-dd-cat">Structural Analysis</div><a href="/rc-section-designer/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="4.5" y="5" width="15" height="14" rx="1.5"/><circle cx="9" cy="9.5" r="1.1" fill="#fff" stroke="none"/><circle cx="15" cy="9.5" r="1.1" fill="#fff" stroke="none"/><circle cx="9" cy="14.5" r="1.1" fill="#fff" stroke="none"/><circle cx="15" cy="14.5" r="1.1" fill="#fff" stroke="none"/></svg></span>Reinforced Concrete Section Designer</a><a href="/modal-analysis/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14c2-6 4-6 5 0s3 6 5 0 3-6 5 0 3 6 5 0"/></svg></span>Modal Analysis Calculator</a><a href="/design-spectrum/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17C4 14 5 9 6.5 7L13 7C14 9 14.5 10.5 15.5 12C17 14.5 18.5 16 21 18"/></svg></span>Design Spectrum</a><a href="/ground-motion/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-7 4 14 3-10 2 6h4"/></svg></span>Ground Motion Analyzer</a><a href="/building-response/"><span class="hd-dd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 21v-4h6v4"/><path d="M8 7h.01M12 7h.01M16 7h.01M8 11h.01M12 11h.01M16 11h.01"/></svg></span>Building Response Lab</a></div></div><span class="hd-sep">|</span><a href="/about/">About</a><span class="hd-sep">|</span><a href="/contact/">Contact</a><span class="hd-sep">|</span><a class="hd-ic" href="https://www.youtube.com/@Structural.Analysis" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M10.3 9.4v5.2l4.6-2.6-4.6-2.6z" fill="currentColor"/></svg></a><a class="hd-ic" href="https://www.linkedin.com/in/arashnassirpour/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.5V17M8 7.2v.1M12 17v-3.7c0-1.3.9-2.3 2.2-2.3 1.3 0 2.3 1 2.3 2.3V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a></nav></div>
+<script>
+(function(){
+  var dd = document.getElementById('hdDd');
+  var btn = document.getElementById('hdDdBtn');
+  var menu = dd ? dd.querySelector('.hd-dd-menu') : null;
+  if(!dd||!btn||!menu) return;
+  function positionMenu(){
+    var r = btn.getBoundingClientRect();
+    menu.style.top = (r.bottom + 10) + 'px';
+    var left = r.right - menu.offsetWidth;
+    if (left < 10) left = 10;
+    menu.style.left = left + 'px';
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    dd.classList.toggle('open');
+    if (dd.classList.contains('open')) positionMenu();
+  });
+  document.addEventListener('click', function(){ dd.classList.remove('open'); });
+  window.addEventListener('resize', function(){ if (dd.classList.contains('open')) positionMenu(); });
+  window.addEventListener('scroll', function(){ if (dd.classList.contains('open')) positionMenu(); }, true);
+  menu.addEventListener('click', function(e){ e.stopPropagation(); });
+})();
+</script>
+</header>
+
+
+<main>
+  <div class="tabnav">
+    <a href="/world-faults/">Globe</a>
+    <a href="/world-faults/stats/" class="on">Stats</a>
+  </div>
+
+  <h1>Seismic statistics</h1>
+  <p class="sub">Over the last <b id="windowLabel">7 days</b> · magnitude <b id="magLabel">2.5+</b></p>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Window</span>
+      <div class="seg" id="windowSeg">
+        <button data-days="1">1d</button>
+        <button data-days="7" class="on">7d</button>
+        <button data-days="30">30d</button>
+        <button data-days="365">1y</button>
+      </div>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Minimum magnitude</span>
+      <div class="seg" id="magSeg">
+        <button data-mag="1.5">1.5+</button>
+        <button data-mag="2.5" class="on">2.5+</button>
+        <button data-mag="4.5">4.5+</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="status" id="statusLine">Loading statistics…</p>
+
+  <div class="stat-row" id="statRow"></div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>Magnitude distribution</h2>
+      <p class="panel-note">Count of earthquakes by magnitude range</p>
+      <div class="chart-wrap"><canvas id="magChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2>Daily activity</h2>
+      <p class="panel-note">Earthquake count per day, UTC</p>
+      <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:24px">
+    <h2>Depth breakdown</h2>
+    <p class="panel-note">Standard USGS depth classification</p>
+    <div class="depth-row" id="depthRow"></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:24px">
+    <h2>Active swarms</h2>
+    <p class="panel-note">Clusters of 8 or more events within roughly 50 km and 3 days of each other in the current window — a simple heuristic, not an official swarm classification</p>
+    <div class="swarm-list" id="swarmList"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Notable volcanoes</h2>
+    <p class="panel-note">A curated set of well-known Holocene volcanoes. "Near recent activity" flags volcanoes within 100&nbsp;km of an earthquake in the current window.</p>
+    <input type="text" class="volc-search" id="volcSearch" placeholder="Search by name or country…">
+    <div class="volc-scroll">
+      <table class="volc-table">
+        <thead><tr><th>Volcano</th><th>Country</th><th>Last known activity</th></tr></thead>
+        <tbody id="volcBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="pagefoot">
+  Earthquake data from the free, public <a href="https://earthquake.usgs.gov" target="_blank" rel="noopener">USGS Earthquake Hazards Program</a> FDSNWS event API. Updated live; no account required.<br>
+  Volcano list: curated selection referencing the Smithsonian Institution's <a href="https://volcano.si.edu" target="_blank" rel="noopener">Global Volcanism Program</a> — Global Volcanism Program, 2025. <em>Volcanoes of the World</em> (v. 5.3.6). Not the full live GVP database.
+</footer>
+
+<script>
+const G = {
+  days: 7,
+  mag: 2.5,
+  quakes: [],
+};
+
+const WINDOW_LABELS = {1:'1 day', 7:'7 days', 30:'30 days', 365:'1 year'};
+
+function $(id){ return document.getElementById(id); }
+
+// ---------- Curated notable-volcano dataset ----------
+// name, country, lat, lon, last known activity (approximate, for illustration)
+const VOLCANOES = [
+["Kilauea","USA",19.421,-155.287,"Erupting 2024–2025"],
+["Mauna Loa","USA",19.475,-155.608,"Erupted 2022"],
+["Mount St. Helens","USA",46.200,-122.180,"Dome growth 2004–2008"],
+["Mount Rainier","USA",46.853,-121.760,"Fumarolic, no eruption in historical time"],
+["Mount Shasta","USA",41.409,-122.194,"Dormant"],
+["Popocatépetl","Mexico",19.023,-98.622,"Ongoing intermittent activity"],
+["Colima","Mexico",19.514,-103.620,"Ongoing intermittent activity"],
+["Fuego","Guatemala",14.473,-90.880,"Frequent eruptions, ongoing"],
+["Pacaya","Guatemala",14.382,-90.601,"Ongoing intermittent activity"],
+["Santa María / Santiaguito","Guatemala",14.756,-91.552,"Ongoing dome growth"],
+["Momotombo","Nicaragua",12.422,-86.539,"Erupted 2015"],
+["San Cristóbal","Nicaragua",12.702,-87.004,"Ongoing intermittent activity"],
+["Concepción","Nicaragua",11.538,-85.622,"Ongoing intermittent activity"],
+["Turrialba","Costa Rica",10.025,-83.767,"Ongoing intermittent activity"],
+["Poás","Costa Rica",10.200,-84.233,"Ongoing intermittent activity"],
+["Arenal","Costa Rica",10.463,-84.703,"Quiet since 2010"],
+["Cotopaxi","Ecuador",-0.677,-78.436,"Erupted 2015, unrest since"],
+["Tungurahua","Ecuador",-1.467,-78.442,"Eruptive cycle ended 2016"],
+["Sangay","Ecuador",-2.005,-78.341,"Ongoing near-continuous activity"],
+["Reventador","Ecuador",-0.077,-77.656,"Ongoing intermittent activity"],
+["Nevado del Ruiz","Colombia",4.892,-75.324,"Ongoing unrest"],
+["Ubinas","Peru",-16.355,-70.903,"Ongoing intermittent activity"],
+["Sabancaya","Peru",-15.787,-71.857,"Ongoing intermittent activity"],
+["Villarrica","Chile",-39.420,-71.930,"Ongoing intermittent activity"],
+["Llaima","Chile",-38.692,-71.729,"Ongoing intermittent activity"],
+["Copahue","Chile",-37.856,-71.170,"Ongoing intermittent activity"],
+["Etna","Italy",37.751,14.995,"Frequent eruptions, ongoing"],
+["Stromboli","Italy",38.789,15.213,"Persistently active"],
+["Vesuvius","Italy",40.821,14.426,"Dormant since 1944"],
+["Vulcano","Italy",38.404,14.962,"Fumarolic, elevated unrest since 2021"],
+["Santorini","Greece",36.404,25.396,"Seismic unrest 2025"],
+["Hekla","Iceland",63.983,-19.700,"Erupted 2000"],
+["Katla","Iceland",63.633,-19.083,"Overdue, monitored closely"],
+["Grímsvötn","Iceland",64.416,-17.316,"Erupted 2011"],
+["Bárðarbunga","Iceland",64.633,-17.516,"Erupted 2014–2015"],
+["Askja","Iceland",65.030,-16.750,"Uplift ongoing since 2021"],
+["Fagradalsfjall / Sundhnúkur","Iceland",63.883,-22.271,"Frequent eruptions since 2021"],
+["Nyiragongo","DR Congo",-1.520,29.250,"Erupted 2021"],
+["Nyamuragira","DR Congo",-1.408,29.200,"Ongoing intermittent activity"],
+["Erta Ale","Ethiopia",13.600,40.670,"Persistent lava lake"],
+["Erebus","Antarctica",-77.530,167.170,"Persistent lava lake"],
+["Piton de la Fournaise","Réunion (France)",-21.229,55.708,"Frequent eruptions, ongoing"],
+["Nishinoshima","Japan",27.247,140.874,"Ongoing intermittent activity"],
+["Sakurajima","Japan",31.585,130.657,"Persistently active"],
+["Asama","Japan",36.406,138.523,"Ongoing intermittent activity"],
+["Aso","Japan",32.884,131.104,"Ongoing intermittent activity"],
+["Kirishima (Shinmoedake)","Japan",31.934,130.862,"Ongoing intermittent activity"],
+["Ontake","Japan",35.893,137.480,"Erupted 2014"],
+["Fuji","Japan",35.361,138.727,"Dormant since 1707"],
+["Mayon","Philippines",13.257,123.685,"Ongoing intermittent activity"],
+["Taal","Philippines",14.002,120.993,"Ongoing unrest since 2020"],
+["Bulusan","Philippines",12.770,124.050,"Ongoing intermittent activity"],
+["Pinatubo","Philippines",15.130,120.350,"Dormant since 1993"],
+["Merapi","Indonesia",-7.542,110.446,"Ongoing dome growth"],
+["Semeru","Indonesia",-8.108,112.922,"Ongoing intermittent activity"],
+["Sinabung","Indonesia",3.170,98.392,"Ongoing intermittent activity"],
+["Anak Krakatau","Indonesia",-6.102,105.423,"Rebuilding since 2018 collapse"],
+["Agung","Indonesia",-8.343,115.508,"Erupted 2017–2019"],
+["Kelud","Indonesia",-7.930,112.308,"Erupted 2014"],
+["Ruang","Indonesia",2.280,125.407,"Erupted 2024"],
+["Klyuchevskaya","Russia",56.056,160.642,"Frequent eruptions, ongoing"],
+["Sheveluch","Russia",56.653,161.360,"Ongoing dome growth"],
+["Bezymianny","Russia",55.978,160.587,"Ongoing intermittent activity"],
+["Karymsky","Russia",54.049,159.443,"Ongoing intermittent activity"],
+["Tolbachik","Russia",55.830,160.326,"Erupted 2012–2013"],
+["Yasur","Vanuatu",-19.532,169.447,"Persistently active"],
+["Ambrym","Vanuatu",-16.250,168.120,"Persistent lava lakes"],
+["Manam","Papua New Guinea",-4.080,145.037,"Ongoing intermittent activity"],
+["Rabaul (Tavurvur)","Papua New Guinea",-4.271,152.203,"Ongoing intermittent activity"],
+["Bagana","Papua New Guinea",-6.137,155.196,"Persistently active"],
+["Whakaari / White Island","New Zealand",-37.521,177.183,"Erupted 2019"],
+["Ruapehu","New Zealand",-39.281,175.568,"Ongoing intermittent unrest"],
+["Ngauruhoe / Tongariro","New Zealand",-39.157,175.632,"Dormant since 1975"],
+["Kilimanjaro","Tanzania",-3.067,37.353,"Dormant, fumarolic"],
+];
+
+// ---------- helpers ----------
+function fmtDate(d){
+  return d.toISOString().slice(0,10);
+}
+
+function haversineKm(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+let magChartObj=null, dailyChartObj=null;
+
+async function loadStats(){
+  $('statusLine').textContent = 'Loading statistics…';
+  $('statusLine').className = 'status';
+  $('windowLabel').textContent = WINDOW_LABELS[G.days] || (G.days+' days');
+  $('magLabel').textContent = G.mag+'+';
+
+  const end = new Date();
+  const start = new Date(end.getTime() - G.days*86400000);
+  const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${fmtDate(start)}&endtime=${fmtDate(end)}&minmagnitude=${G.mag}&orderby=time`;
+
+  try{
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 12000);
+    const res = await fetch(url, {signal: controller.signal});
+    clearTimeout(timer);
+    if(!res.ok) throw new Error(`USGS returned HTTP ${res.status}`);
+    const data = await res.json();
+    G.quakes = (data.features || []).map(f => ({
+      mag: f.properties.mag,
+      time: f.properties.time,
+      place: f.properties.place || 'Unknown location',
+      depth: f.geometry.coordinates[2],
+      lon: f.geometry.coordinates[0],
+      lat: f.geometry.coordinates[1],
+    })).filter(q => typeof q.mag === 'number' && q.mag !== null);
+
+    $('statusLine').textContent = `${G.quakes.length.toLocaleString()} earthquakes found`;
+    renderAll();
+  }catch(e){
+    $('statusLine').textContent = `Could not load USGS data (${e.message}). Try a shorter window or refresh.`;
+    $('statusLine').className = 'status err';
+  }
+}
+
+function renderAll(){
+  renderStatRow();
+  renderMagChart();
+  renderDailyChart();
+  renderDepth();
+  renderSwarms();
+  renderVolcanoes();
+}
+
+function renderStatRow(){
+  const qs = G.quakes;
+  const n = qs.length;
+  const maxQ = qs.reduce((a,b)=> (b.mag > (a?.mag ?? -Infinity) ? b : a), null);
+  const avg = n ? (qs.reduce((s,q)=>s+q.mag,0)/n) : 0;
+  const perDay = n ? (n/G.days) : 0;
+
+  $('statRow').innerHTML = `
+    <div class="stat-card"><div class="label">Total events</div><div class="value">${n.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Largest</div><div class="value">${maxQ ? maxQ.mag.toFixed(1) : '—'}<small>${maxQ ? maxQ.place : ''}</small></div></div>
+    <div class="stat-card"><div class="label">Average magnitude</div><div class="value">${n ? avg.toFixed(2) : '—'}</div></div>
+    <div class="stat-card"><div class="label">Events per day</div><div class="value">${n ? perDay.toFixed(1) : '—'}</div></div>
+  `;
+}
+
+function renderMagChart(){
+  const bins = [
+    {label:'<3', test:m=>m<3},
+    {label:'3–4', test:m=>m>=3&&m<4},
+    {label:'4–5', test:m=>m>=4&&m<5},
+    {label:'5–6', test:m=>m>=5&&m<6},
+    {label:'6–7', test:m=>m>=6&&m<7},
+    {label:'7+', test:m=>m>=7},
+  ];
+  const counts = bins.map(b => G.quakes.filter(q=>b.test(q.mag)).length);
+  const colors = ['#2b6df0','#0fa66e','#e2a112','#e8493c','#8b3df0','#10172a'];
+
+  if(magChartObj) magChartObj.destroy();
+  magChartObj = new Chart($('magChart'), {
+    type: 'bar',
+    data: { labels: bins.map(b=>b.label), datasets: [{ data: counts, backgroundColor: colors, borderRadius: 4 }] },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{ y:{ beginAtZero:true, ticks:{precision:0} } }
+    }
+  });
+}
+
+function renderDailyChart(){
+  const dayCount = Math.min(G.days, 60); // cap bars for readability on the 1y window
+  const bucketDays = G.days > 60 ? Math.ceil(G.days/60) : 1;
+  const buckets = {};
+  const end = new Date();
+  for(let i=0;i<Math.ceil(G.days/bucketDays);i++){
+    const d = new Date(end.getTime() - i*bucketDays*86400000);
+    buckets[fmtDate(d)] = 0;
+  }
+  G.quakes.forEach(q=>{
+    const d = new Date(q.time);
+    const bucketIdx = Math.floor((end - d) / (bucketDays*86400000));
+    const bucketDate = new Date(end.getTime() - bucketIdx*bucketDays*86400000);
+    const key = fmtDate(bucketDate);
+    if(key in buckets) buckets[key]++;
+  });
+  const labels = Object.keys(buckets).reverse();
+  const values = labels.map(k=>buckets[k]);
+
+  if(dailyChartObj) dailyChartObj.destroy();
+  dailyChartObj = new Chart($('dailyChart'), {
+    type: 'bar',
+    data: { labels, datasets:[{ data: values, backgroundColor:'#2b6df0', borderRadius:3 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ ticks:{ maxTicksLimit:8, font:{size:10} } }, y:{ beginAtZero:true, ticks:{precision:0} } }
+    }
+  });
+}
+
+function renderDepth(){
+  const shallow = G.quakes.filter(q=>q.depth<70).length;
+  const inter = G.quakes.filter(q=>q.depth>=70&&q.depth<300).length;
+  const deep = G.quakes.filter(q=>q.depth>=300).length;
+  const rows = [
+    {n:shallow, lbl:'Shallow', range:'0–70 km', bg:'var(--accent-bg)', color:'var(--accent)'},
+    {n:inter, lbl:'Intermediate', range:'70–300 km', bg:'var(--warn-bg)', color:'var(--warn)'},
+    {n:deep, lbl:'Deep', range:'300+ km', bg:'var(--bad-bg)', color:'var(--bad)'},
+  ];
+  $('depthRow').innerHTML = rows.map(r=>`
+    <div class="depth-card" style="background:${r.bg}">
+      <div class="n" style="color:${r.color}">${r.n.toLocaleString()}</div>
+      <div class="lbl">${r.lbl}</div>
+      <div class="range">${r.range}</div>
+    </div>`).join('');
+}
+
+function renderSwarms(){
+  // grid-cell clustering: 0.5 degree cells, flag cells with >=8 events
+  const cellSize = 0.5;
+  const cells = {};
+  G.quakes.forEach(q=>{
+    const cx = Math.round(q.lat/cellSize)*cellSize;
+    const cy = Math.round(q.lon/cellSize)*cellSize;
+    const key = `${cx},${cy}`;
+    if(!cells[key]) cells[key] = { lat:cx, lon:cy, events: [] };
+    cells[key].events.push(q);
+  });
+  const swarms = Object.values(cells)
+    .filter(c => c.events.length >= 8)
+    .sort((a,b) => b.events.length - a.events.length)
+    .slice(0, 6);
+
+  if(!swarms.length){
+    $('swarmList').innerHTML = '<p class="empty-note">No swarm-like clusters detected in this window at this magnitude threshold.</p>';
+    return;
+  }
+
+  $('swarmList').innerHTML = swarms.map(s=>{
+    const times = s.events.map(e=>e.time).sort((a,b)=>a-b);
+    const maxMag = Math.max(...s.events.map(e=>e.mag));
+    const place = s.events[0].place;
+    const start = new Date(times[0]).toISOString().slice(0,10);
+    const end = new Date(times[times.length-1]).toISOString().slice(0,10);
+    return `<div class="swarm-item">
+      <div>
+        <div class="loc">${place}</div>
+        <div class="meta">${start === end ? start : start+' to '+end} · largest M${maxMag.toFixed(1)}</div>
+      </div>
+      <div class="count">${s.events.length}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderVolcanoes(filterText){
+  const filter = (filterText||'').toLowerCase();
+  const rows = VOLCANOES
+    .filter(v => !filter || v[0].toLowerCase().includes(filter) || v[1].toLowerCase().includes(filter))
+    .map(v=>{
+      const [name, country, lat, lon, status] = v;
+      const near = G.quakes.some(q => haversineKm(lat, lon, q.lat, q.lon) < 100);
+      return `<tr><td>${name}${near ? '<span class="near">near recent activity</span>' : ''}</td><td>${country}</td><td>${status}</td></tr>`;
+    });
+  $('volcBody').innerHTML = rows.join('') || '<tr><td colspan="3" style="color:var(--ink-faint)">No matches</td></tr>';
+}
+
+$('windowSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  $('windowSeg').querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  G.days = Number(btn.dataset.days);
+  loadStats();
+});
+$('magSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  $('magSeg').querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  G.mag = Number(btn.dataset.mag);
+  loadStats();
+});
+$('volcSearch').addEventListener('input', e=>renderVolcanoes(e.target.value));
+
+renderVolcanoes();
+loadStats();
+</script>
+</body>
+</html>
