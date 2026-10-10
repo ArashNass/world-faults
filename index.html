@@ -1612,6 +1612,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
   .type-filters{min-width:0;width:100%;flex:1 1 100%}
 }
 </style>
+<style>
+/* phones: 16px form fields stop iOS Safari zooming the page in when one is tapped */
+@media (max-width:760px){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),select,textarea{font-size:16px!important}}
+</style>
 </head>
 <body>
 <!-- shared site header -->
@@ -1957,6 +1961,21 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
   controls3.enablePan = false;
   controls3.autoRotate = true;
   controls3.autoRotateSpeed = .35;
+
+  // Touch devices: one finger scrolls the page, two fingers pinch-zoom/rotate the view.
+  // (OrbitControls cancels scrolling on every touch that starts inside the canvas, which trapped the page.)
+  if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+    controls3.enabled = false;
+    controls3.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_ROTATE };
+    const touchCanvas = renderer3.domElement;
+    touchCanvas.style.touchAction = 'pan-x pan-y';
+    touchCanvas.parentElement.addEventListener('touchstart', function (e) {
+      if (e.target === touchCanvas) controls3.enabled = e.targetTouches.length >= 2;
+    }, { capture: true, passive: true });
+    const touchOff = function (e) { if (e.targetTouches.length < 2) setTimeout(function () { controls3.enabled = false; }, 0); };
+    touchCanvas.addEventListener('touchend', touchOff, { passive: true });
+    touchCanvas.addEventListener('touchcancel', touchOff, { passive: true });
+  }
 
   function syncSpinToggle(){
     const spinning = controls3.autoRotate;
