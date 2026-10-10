@@ -1603,6 +1603,15 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
   "author": { "@type": "Person", "name": "Arash Nassirpour" }
 }
 </script>
+
+<style>
+/* phone layout: these must come after the base rules above, or the base min-width/width wins */
+@media(max-width:620px){
+  .quake-feed-wrap{min-width:0;width:100%;flex:1 1 100%;align-items:flex-start}
+  .quake-feed-status{width:100%;flex:1 1 100%}
+  .type-filters{min-width:0;width:100%;flex:1 1 100%}
+}
+</style>
 </head>
 <body>
 <!-- shared site header -->
