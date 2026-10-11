@@ -8,8 +8,10 @@ An interactive global map of tectonic plate boundaries, named fault systems, and
 
 - Plate boundaries colour-coded by tectonic mechanism.
 - Twenty-two named fault systems.
-- Significant earthquakes from the previous 30 days, retrieved live from USGS.
+- Significant earthquakes from the previous 30 days, retrieved live from USGS and shown by default, with an on/off switch, 24 h / 7 d / 30 d windows and a minimum-magnitude filter. A bundled snapshot is shown if the live feed is unreachable.
 - Interactive map controls and event details.
+- A statistics page at `/world-faults/stats/`: magnitude distribution, daily activity, depth breakdown, active swarms and notable volcanoes from the live USGS feed, with a map that offers Light, Dark, Satellite, Terrain, Street and NatGeo basemaps (all Esri, no API key).
+- A Standard / Sentinel theme switch. The optional Sentinel mission-control theme is loaded on demand from `/sentinel/` in the main site repository (`arashnass.github.io`); when the page is opened locally the switch has no effect.
 - A self-contained browser application with no build step.
 
 Plate-boundary geometry is based on the Bird (2003) PB2002 model. Recent earthquake information is supplied by USGS and may be revised as events are reviewed.
