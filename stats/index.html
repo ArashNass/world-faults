@@ -120,7 +120,7 @@ footer.pagefoot a{color:var(--ink-soft)}
    (/sentinel/) are only fetched when Sentinel is chosen (or was chosen last time). ?theme=sentinel / ?theme=off
    also work as links. Keep this copy in sync with the pages. */
 (function(){
-  var K='sx-theme',B='/sentinel/',V='3',d=document,w=window,loading=0,pending=null;
+  var K='sx-theme',B='/sentinel/',V='4',d=document,w=window,loading=0,pending=null;
   function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   if(/[?&]theme=sentinel(&|$)/.test(location.search))s(K,'sentinel');
@@ -815,9 +815,9 @@ const TILE_SOURCES = {
   light: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
   dark: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
   satellite: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri' },
-  terrain: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attribution: '&copy; OpenStreetMap contributors, SRTM &copy; OpenTopoMap' },
+  terrain: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NOAA' },
   voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
-  street: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OpenStreetMap contributors' },
+  street: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NOAA' },
 };
 let currentTile = 'light';
 

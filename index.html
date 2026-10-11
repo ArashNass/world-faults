@@ -1030,6 +1030,17 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 }
 .quake-toggle:hover{background:linear-gradient(180deg, #1d568f 0%, #154778 100%)}
 .quake-toggle.active{background:linear-gradient(180deg, #103964 0%, #0b2f55 100%);border-color:#1d6fcc;color:#ffffff}
+.quake-toggle .qt-text{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;text-align:left}
+.quake-toggle .qt-text small{font-size:10.5px;font-weight:600;opacity:.78;letter-spacing:.02em}
+.qt-switch{position:relative;width:36px;height:20px;border-radius:999px;background:rgba(255,255,255,.28);flex-shrink:0;transition:background .2s}
+.qt-switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.quake-toggle.active .qt-switch{background:#2fcf86}
+.quake-toggle.active .qt-switch::after{transform:translateX(16px)}
+.quake-toggle:focus-visible,.quake-stats-cta:focus-visible{outline:2px solid #4cff9d;outline-offset:2px}
+.quake-stats-cta{display:flex;align-items:center;gap:9px;align-self:stretch;margin-top:8px;padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,#2f7bf5 0%,#1f5fd0 100%);color:#fff!important;font-size:12.5px;font-weight:800;letter-spacing:.01em;text-decoration:none!important;box-shadow:0 8px 18px rgba(31,95,208,.28);transition:transform .15s,box-shadow .15s}
+.quake-stats-cta:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(31,95,208,.4)}
+.quake-stats-cta .qsc-arrow{margin-left:auto;font-size:15px;transition:transform .15s}
+.quake-stats-cta:hover .qsc-arrow{transform:translateX(3px)}
 .pulse-dot{
   width:10px;height:10px;border-radius:999px;
   background:#c6d8ee;
@@ -1621,7 +1632,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
    (/sentinel/) are only fetched when Sentinel is chosen (or was chosen last time). ?theme=sentinel / ?theme=off
    also work as links. Keep this copy in sync with the pages. */
 (function(){
-  var K='sx-theme',B='/sentinel/',V='3',d=document,w=window,loading=0,pending=null;
+  var K='sx-theme',B='/sentinel/',V='4',d=document,w=window,loading=0,pending=null;
   function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   if(/[?&]theme=sentinel(&|$)/.test(location.search))s(K,'sentinel');
@@ -1759,9 +1770,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       <div class="globe-topbar">
         <div class="tag" style="background:var(--bg)">Drag to spin the globe</div>
         <div class="quake-feed-wrap">
-          <button class="quake-toggle" id="quakeFeedToggle" type="button">
+          <button class="quake-toggle active" id="quakeFeedToggle" type="button" role="switch" aria-checked="true">
             <span class="pulse-dot" id="quakeToggleDot"></span>
-            <span id="quakeToggleLabel">Show major earthquakes, last 30 days</span>
+            <span class="qt-text"><span id="quakeToggleLabel">Recent earthquakes</span><small id="quakeToggleHint">Showing on the globe &middot; tap to hide</small></span>
+            <span class="qt-switch" aria-hidden="true"></span>
           </button>
         </div>
       </div>
@@ -1786,6 +1798,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
                 </select>
               </label>
             </div>
+            <a class="quake-stats-cta" href="/world-faults/stats/" title="Magnitude distribution, daily activity, depth breakdown, swarms and volcanoes">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg>
+              <span>View earthquake statistics</span><span class="qsc-arrow" aria-hidden="true">&rarr;</span>
+            </a>
           </div>
       </div>
 
@@ -2618,7 +2634,7 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
   const quakeGroup = new THREE.Group();
   scene3.add(quakeGroup);
   let quakeMarkers = [];
-  let quakeFeedOn = false;
+  let quakeFeedOn = true;   /* recent earthquakes are shown by default */
   let quakeTimeWindowDays = 30;
   let quakeMinMagnitude = 4.5;
   let quakeDataReferenceTime = Date.now();
@@ -2759,12 +2775,13 @@ const QUAKE_SNAPSHOT_DATE = '14 Apr 2026 07:07 UTC';
 
   // Load snapshot immediately so there's always something to show, then try to refresh live.
   loadSnapshotData();
-  quakeGroup.visible = false;
   setTimeout(tryLiveFetch, 800);
 
   quakeFeedToggle.addEventListener("click", function(){
     quakeFeedOn = !quakeFeedOn;
     quakeFeedToggle.classList.toggle("active", quakeFeedOn);
+    quakeFeedToggle.setAttribute("aria-checked", quakeFeedOn ? "true" : "false");
+    document.getElementById("quakeToggleHint").innerHTML = quakeFeedOn ? "Showing on the globe &middot; tap to hide" : "Hidden &middot; tap to show";
     applyQuakeFilters();
     if(quakeFeedOn){
       quakeFeedStatus.classList.remove("hidden");
