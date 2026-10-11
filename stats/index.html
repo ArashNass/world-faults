@@ -304,7 +304,7 @@ footer.pagefoot a{color:var(--ink-soft)}
         <button class="map-style-more-toggle" id="mapStyleMoreToggle" type="button" aria-label="More map styles" title="More map styles">&rsaquo;</button>
         <div class="map-style-popover hidden" id="mapStylePopover">
           <button class="map-style-btn" type="button" data-tile="terrain">Terrain</button>
-          <button class="map-style-btn" type="button" data-tile="voyager">Voyager</button>
+          <button class="map-style-btn" type="button" data-tile="voyager">NatGeo</button>
           <button class="map-style-btn" type="button" data-tile="street">Street</button>
         </div>
       </div>
@@ -812,11 +812,11 @@ function renderVolcanoes(filterText){
 }
 
 const TILE_SOURCES = {
-  light: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
-  dark: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
+  light: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri', native: 16 },
+  dark: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri', native: 16 },
   satellite: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri' },
   terrain: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NOAA' },
-  voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; OpenStreetMap contributors &copy; CARTO' },
+  voyager: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC', native: 12 },
   street: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NOAA' },
 };
 let currentTile = 'light';
@@ -833,7 +833,7 @@ function renderMap(){
   if(!G.mapObj){
     G.mapObj = L.map('mapView', { worldCopyJump:true }).setView([15, 10], 2);
     G.tileLayerObj = L.tileLayer(TILE_SOURCES[currentTile].url, {
-      attribution: TILE_SOURCES[currentTile].attribution, maxZoom: 18
+      attribution: TILE_SOURCES[currentTile].attribution, maxZoom: 18, maxNativeZoom: TILE_SOURCES[currentTile].native || 18
     }).addTo(G.mapObj);
     G.mapLayer = L.layerGroup().addTo(G.mapObj);
     G.magFilterLayer = L.layerGroup().addTo(G.mapObj);
@@ -922,7 +922,7 @@ function switchTile(name){
   if(!TILE_SOURCES[name] || !G.mapObj) return;
   currentTile = name;
   G.mapObj.removeLayer(G.tileLayerObj);
-  G.tileLayerObj = L.tileLayer(TILE_SOURCES[name].url, { attribution: TILE_SOURCES[name].attribution, maxZoom: 18 }).addTo(G.mapObj);
+  G.tileLayerObj = L.tileLayer(TILE_SOURCES[name].url, { attribution: TILE_SOURCES[name].attribution, maxZoom: 18, maxNativeZoom: TILE_SOURCES[name].native || 18 }).addTo(G.mapObj);
   G.tileLayerObj.bringToBack();
   $('mapStyleBar').querySelectorAll('.map-style-btn').forEach(b => b.classList.toggle('active', b.dataset.tile === name));
 }
