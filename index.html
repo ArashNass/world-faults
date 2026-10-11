@@ -926,7 +926,8 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 .globe-clean-toggle:hover{background:rgba(18,45,76,.94);border-color:rgba(98,169,255,.45);transform:translateY(-1px)}
 .globe-clean-toggle.active{background:#fff;color:#10172a;border-color:#fff}
 .side.clean-view-active > .globe-topbar,
-.side.clean-view-active > .filter-row{display:none}
+.side.clean-view-active > .filter-row,
+.side.clean-view-active > .quake-bar{display:none}
 .quake-layout.clean-view{grid-template-columns:1fr}
 .quake-layout.clean-view .quake-controls{display:none}
 .quake-viewer-wrap.clean-view .globe-spin-toggle,
@@ -1036,11 +1037,11 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 .qt-switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
 .quake-toggle.active .qt-switch{background:#2fcf86}
 .quake-toggle.active .qt-switch::after{transform:translateX(16px)}
-.quake-toggle:focus-visible,.quake-stats-cta:focus-visible{outline:2px solid #4cff9d;outline-offset:2px}
-.quake-stats-cta{display:flex;align-items:center;gap:9px;align-self:stretch;margin-top:8px;padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,#2f7bf5 0%,#1f5fd0 100%);color:#fff!important;font-size:12.5px;font-weight:800;letter-spacing:.01em;text-decoration:none!important;box-shadow:0 8px 18px rgba(31,95,208,.28);transition:transform .15s,box-shadow .15s}
-.quake-stats-cta:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(31,95,208,.4)}
-.quake-stats-cta .qsc-arrow{margin-left:auto;font-size:15px;transition:transform .15s}
-.quake-stats-cta:hover .qsc-arrow{transform:translateX(3px)}
+.quake-toggle:focus-visible,.stats-cta:focus-visible{outline:2px solid #4cff9d;outline-offset:2px}
+.stats-cta{display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border-radius:12px;background:linear-gradient(180deg,#2f7bf5 0%,#1f5fd0 100%);color:#fff!important;font-size:12.5px;font-weight:800;letter-spacing:.01em;text-decoration:none!important;box-shadow:0 8px 18px rgba(31,95,208,.28);transition:transform .15s,box-shadow .15s}
+.stats-cta:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(31,95,208,.4)}
+.stats-cta .sc-arrow{font-size:15px;transition:transform .15s}
+.stats-cta:hover .sc-arrow{transform:translateX(3px)}
 .pulse-dot{
   width:10px;height:10px;border-radius:999px;
   background:#c6d8ee;
@@ -1616,6 +1617,24 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 </script>
 
 <style>
+/* earthquake controls sit in their own row (toggle + status/filters) so they never stretch the fault-type row */
+.quake-bar{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
+.quake-bar .quake-feed-wrap{flex:0 0 300px;width:300px}
+.quake-bar .quake-feed-status{flex:1 1 auto;width:auto;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:18px;align-content:center;align-items:center;margin:0}
+.quake-bar .quake-feed-status.hidden{display:none}
+.quake-bar .quake-feed-status-label,.quake-bar .quake-feed-status-text{grid-column:1}
+.quake-bar .quake-filter-bar{grid-column:2;grid-row:1 / span 2;width:auto;margin:0;padding:0;border:0;gap:12px}
+.globe-topbar{align-items:center}
+@media(max-width:900px){
+  .quake-bar{flex-wrap:wrap}
+  .quake-bar .quake-feed-wrap{flex:1 1 100%;width:100%}
+  .quake-bar .quake-feed-status{flex:1 1 100%}
+}
+@media(max-width:620px){
+  .quake-bar .quake-feed-status{grid-template-columns:minmax(0,1fr)}
+  .quake-bar .quake-filter-bar{grid-column:1;grid-row:auto;justify-content:space-between;margin-top:8px;padding-top:9px;border-top:1px solid var(--line)}
+  .stats-cta{flex:1 1 100%;justify-content:center}
+}
 /* phone layout: these must come after the base rules above, or the base min-width/width wins */
 @media(max-width:620px){
   .quake-feed-wrap{min-width:0;width:100%;flex:1 1 100%;align-items:flex-start}
@@ -1632,7 +1651,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
    (/sentinel/) are only fetched when Sentinel is chosen (or was chosen last time). ?theme=sentinel / ?theme=off
    also work as links. Keep this copy in sync with the pages. */
 (function(){
-  var K='sx-theme',B='/sentinel/',V='4',d=document,w=window,loading=0,pending=null;
+  var K='sx-theme',B='/sentinel/',V='5',d=document,w=window,loading=0,pending=null;
   function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   if(/[?&]theme=sentinel(&|$)/.test(location.search))s(K,'sentinel');
@@ -1755,10 +1774,6 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
         </div>
       </div>
       <div class="header-tags">
-        <a class="theme-toggle" href="/world-faults/stats/" title="View global earthquake statistics: magnitude distribution, daily activity, depth breakdown and more" style="text-decoration:none;background:var(--accent,#2b6df0);border-color:var(--accent,#2b6df0)">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg>
-          <span>Earthquake statistics</span>
-        </a>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
           <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <span id="themeLabel">Dark mode</span>
@@ -1769,6 +1784,17 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
     <div class="side" style="padding:18px">
       <div class="globe-topbar">
         <div class="tag" style="background:var(--bg)">Drag to spin the globe</div>
+        <a class="stats-cta" href="/world-faults/stats/" title="Magnitude distribution, daily activity, depth breakdown, swarms and volcanoes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg>
+          <span>Earthquake statistics</span><span class="sc-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <div class="filter-row">
+        <div id="typeFilters" class="type-filters"></div>
+      </div>
+
+      <div class="quake-bar">
         <div class="quake-feed-wrap">
           <button class="quake-toggle active" id="quakeFeedToggle" type="button" role="switch" aria-checked="true">
             <span class="pulse-dot" id="quakeToggleDot"></span>
@@ -1776,10 +1802,6 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
             <span class="qt-switch" aria-hidden="true"></span>
           </button>
         </div>
-      </div>
-
-      <div class="filter-row">
-        <div id="typeFilters" class="type-filters"></div>
         <div id="quakeFeedStatus" class="quake-feed-status hidden">
             <div class="quake-feed-status-label">Latest update</div>
             <div id="quakeFeedStatusText" class="quake-feed-status-text"></div>
@@ -1798,10 +1820,6 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
                 </select>
               </label>
             </div>
-            <a class="quake-stats-cta" href="/world-faults/stats/" title="Magnitude distribution, daily activity, depth breakdown, swarms and volcanoes">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg>
-              <span>View earthquake statistics</span><span class="qsc-arrow" aria-hidden="true">&rarr;</span>
-            </a>
           </div>
       </div>
 
