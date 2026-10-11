@@ -925,7 +925,6 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 .globe-clean-toggle svg{width:18px;height:18px;display:block}
 .globe-clean-toggle:hover{background:rgba(18,45,76,.94);border-color:rgba(98,169,255,.45);transform:translateY(-1px)}
 .globe-clean-toggle.active{background:#fff;color:#10172a;border-color:#fff}
-.side.clean-view-active > .globe-topbar,
 .side.clean-view-active > .filter-row,
 .side.clean-view-active > .quake-bar{display:none}
 .quake-layout.clean-view{grid-template-columns:1fr}
@@ -1618,13 +1617,13 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 
 <style>
 /* earthquake controls sit in their own row (toggle + status/filters) so they never stretch the fault-type row */
+.filter-row{align-items:center}
 .quake-bar{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
 .quake-bar .quake-feed-wrap{flex:0 0 300px;width:300px}
 .quake-bar .quake-feed-status{flex:1 1 auto;width:auto;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:18px;align-content:center;align-items:center;margin:0}
 .quake-bar .quake-feed-status.hidden{display:none}
 .quake-bar .quake-feed-status-label,.quake-bar .quake-feed-status-text{grid-column:1}
 .quake-bar .quake-filter-bar{grid-column:2;grid-row:1 / span 2;width:auto;margin:0;padding:0;border:0;gap:12px}
-.globe-topbar{align-items:center}
 @media(max-width:900px){
   .quake-bar{flex-wrap:wrap}
   .quake-bar .quake-feed-wrap{flex:1 1 100%;width:100%}
@@ -1770,11 +1769,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       <div class="brand">
         <div>
           <h1>World Faults &amp; Earthquakes</h1>
-          <div class="subtitle">Tectonic plate boundaries by mechanism, 22 named faults, and significant earthquakes from the past 30 days.</div>
         </div>
       </div>
       <div class="header-tags">
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" hidden tabindex="-1" aria-hidden="true" style="display:none!important">
           <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <span id="themeLabel">Dark mode</span>
         </button>
@@ -1782,16 +1780,12 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
     </header>
     <div class="card">
     <div class="side" style="padding:18px">
-      <div class="globe-topbar">
-        <div class="tag" style="background:var(--bg)">Drag to spin the globe</div>
+      <div class="filter-row">
+        <div id="typeFilters" class="type-filters"></div>
         <a class="stats-cta" href="/world-faults/stats/" title="Magnitude distribution, daily activity, depth breakdown, swarms and volcanoes">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg>
           <span>Earthquake statistics</span><span class="sc-arrow" aria-hidden="true">&rarr;</span>
         </a>
-      </div>
-
-      <div class="filter-row">
-        <div id="typeFilters" class="type-filters"></div>
       </div>
 
       <div class="quake-bar">
