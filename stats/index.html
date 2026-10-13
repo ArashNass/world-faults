@@ -81,6 +81,25 @@ h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:7px}
 .stat-card .label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
 .stat-card .value{font:700 25px/1.15 'JetBrains Mono',monospace;color:var(--ink)}
 .stat-card .value small{display:block;font-size:11.5px;font-weight:500;font-family:'Inter',sans-serif;color:var(--ink-soft);margin-top:3px}
+/* compact header area: title and filters share a row, status is one line, stat cards are short */
+main{padding-top:18px}
+.tabnav{margin-bottom:14px}
+.head-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px;margin-bottom:8px}
+.titleblock h1{font-size:24px;margin-bottom:2px}
+.titleblock .sub{margin:0;font-size:13px}
+.controls{margin:0;padding:6px 8px;gap:6px 14px;border-radius:12px;box-shadow:none}
+.ctrl-group{flex-direction:row;align-items:center;gap:8px}
+.ctrl-label{font-size:10px}
+.seg button{padding:5px 11px;font-size:12px}
+.status-wrap{display:flex;flex-wrap:wrap;gap:2px 14px;margin-bottom:10px}
+.status-wrap .status{padding:0;font-size:12px}
+.stat-row{gap:10px;margin-bottom:16px}
+.stat-card{display:grid;grid-template-columns:20px minmax(0,1fr);column-gap:11px;align-items:center;padding:10px 14px;border-radius:12px}
+.stat-card .icon{grid-row:1 / 3;margin:0;width:20px;height:20px}
+.stat-card .label{margin:0;font-size:10px}
+.stat-card .value{display:flex;align-items:baseline;gap:8px;min-width:0;font-size:20px;line-height:1.2}
+.stat-card .value small{display:block;margin:0;font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:560px){.controls{width:100%;justify-content:space-between}.stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card .value{flex-wrap:wrap;row-gap:0}.stat-card .value small{white-space:normal;flex-basis:100%}}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px}
 @media(max-width:820px){.grid2{grid-template-columns:1fr}}
@@ -290,9 +309,11 @@ footer.pagefoot a{color:var(--ink-soft)}
     <a href="/world-faults/stats/" class="on">Stats</a>
   </div>
 
-  <h1>Seismic statistics</h1>
-  <p class="sub">Over the last <b id="windowLabel">7 days</b> · magnitude <b id="magLabel">2.5+</b></p>
-
+  <div class="head-row">
+    <div class="titleblock">
+    <h1>Seismic statistics</h1>
+    <p class="sub">Over the last <b id="windowLabel">7 days</b> · magnitude <b id="magLabel">2.5+</b></p>
+    </div>
   <div class="controls">
     <div class="ctrl-group">
       <span class="ctrl-label">Window</span>
@@ -312,9 +333,12 @@ footer.pagefoot a{color:var(--ink-soft)}
       </div>
     </div>
   </div>
+  </div>
 
+  <div class="status-wrap">
   <p class="status" id="statusLine">Loading statistics…</p>
   <p class="status" id="updatedLine" style="display:none"></p>
+  </div>
 
   <div class="stat-row" id="statRow"></div>
 
