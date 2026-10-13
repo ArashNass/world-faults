@@ -249,6 +249,11 @@ h1{
   cursor:pointer;
 }
 .theme-toggle:hover{opacity:.88}
+.theme-toggle{width:38px;height:38px;padding:0;justify-content:center;border-radius:50%;background:var(--panel,transparent);border:1px solid var(--line,rgba(128,128,128,.4));color:var(--ink)}
+.theme-toggle:hover{opacity:1;border-color:var(--ink)}
+.theme-toggle:focus-visible{outline:2px solid #4cff9d;outline-offset:2px}
+.theme-toggle .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.theme-toggle svg{width:17px;height:17px}
 .tag{
   font-family:'JetBrains Mono',monospace;
   font-size:11px;
@@ -1772,9 +1777,9 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
         </div>
       </div>
       <div class="header-tags">
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" hidden tabindex="-1" aria-hidden="true" style="display:none!important">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
           <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span id="themeLabel">Dark mode</span>
+          <span id="themeLabel" class="sr-only">Dark mode</span>
         </button>
       </div>
     </header>
@@ -1930,14 +1935,20 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
     const isDark = theme === "dark";
     root.dataset.theme = isDark ? "dark" : "light";
     themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
     themeIcon.innerHTML = isDark ? SUN : MOON;
     if(globeReady) applyGlobeTheme(isDark);
   }
 
   const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  setTheme(prefersDark ? "dark" : "light");
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem("wf-theme"); } catch(e) {}
+  setTheme(savedTheme === "dark" || savedTheme === "light" ? savedTheme : (prefersDark ? "dark" : "light"));
   themeToggle.addEventListener("click", function(){
-    setTheme(root.dataset.theme === "dark" ? "light" : "dark");
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try { localStorage.setItem("wf-theme", next); } catch(e) {}
   });
 
   function easeInOutCubic(x){ return x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2; }
