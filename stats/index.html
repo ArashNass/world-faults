@@ -36,7 +36,7 @@
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0WERZ6WKQY"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-0WERZ6WKQY");</script>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f2350'/%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M3 12h18M12 3c2.7 2.6 4 5.6 4 9s-1.3 6.4-4 9c-2.7-2.6-4-5.6-4-9s1.3-6.4 4-9z' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f2350'/%3E%3Cpath d='M5 19h14M7.5 19v-6M12 19V6M16.5 19v-9' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -348,8 +348,8 @@ footer.pagefoot a{color:var(--ink-soft)}
     <div style="position:relative">
       <div id="mapView" style="height:380px;border-radius:10px;overflow:hidden;position:relative"><div class="skeleton chart-skel" id="mapSkel"></div></div>
       <div class="map-style-bar" id="mapStyleBar">
-        <button class="map-style-btn active" type="button" data-tile="light">Light</button>
-        <button class="map-style-btn" type="button" data-tile="dark">Dark</button>
+        <button class="map-style-btn" type="button" data-tile="light">Light</button>
+        <button class="map-style-btn active" type="button" data-tile="dark">Dark</button>
         <button class="map-style-btn" type="button" data-tile="satellite">Satellite</button>
         <button class="map-style-more-toggle" id="mapStyleMoreToggle" type="button" aria-label="More map styles" title="More map styles">&rsaquo;</button>
         <div class="map-style-popover hidden" id="mapStylePopover">
@@ -894,7 +894,7 @@ const TILE_SOURCES = {
   voyager: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC', native: 12 },
   street: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NOAA' },
 };
-let currentTile = 'light';
+let currentTile = 'dark';
 
 function volcanoIcon(color){
   return L.divIcon({
