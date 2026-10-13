@@ -156,6 +156,61 @@ main{padding-top:18px}
 .map-style-popover .map-style-btn{width:100%;text-align:left}
 @media(max-width:520px){.map-style-bar{top:6px;right:6px;padding:3px}.map-style-btn{padding:5px 7px;font-size:10px}}
 
+/* ---- redesign: map + largest-events split, layer chips, legend, depth bar ---- */
+.panel-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px 16px;margin-bottom:12px}
+.panel-head .panel-note{margin-bottom:0}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;margin-bottom:16px;align-items:stretch}
+.map-panel{padding:16px 16px 14px;min-width:0}
+.map-wrap{position:relative}
+#mapView{height:480px;border-radius:12px;overflow:hidden;position:relative;background:#1b2230}
+.layer-toggles{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-faint);font:600 12px Inter,sans-serif;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--ink-faint);color:var(--ink)}
+.chip.on{background:var(--accent-bg);border-color:rgba(43,109,240,.35);color:var(--accent)}
+.chip i{display:inline-block;flex:0 0 auto}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#ffd23f,#ff4d3d)}
+.chip .sw{width:10px;height:10px;border-radius:50%;background:rgba(226,161,18,.4);border:1.5px solid #e2a112}
+.chip .tri{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid currentColor}
+.chip:not(.on) i{opacity:.45;filter:grayscale(1)}
+.map-legend{position:absolute;left:10px;bottom:10px;z-index:500;display:flex;align-items:center;gap:10px;padding:7px 11px;border-radius:10px;background:rgba(10,16,32,.78);color:#e9eefc;font:600 10.5px Inter,sans-serif;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,.25);flex-wrap:wrap;max-width:calc(100% - 20px)}
+.map-legend span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.map-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
+.map-legend b{font-weight:700;opacity:.7;margin-right:2px;letter-spacing:.04em;text-transform:uppercase;font-size:9.5px}
+.filter-chip{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:var(--accent-bg);border-radius:8px;font-size:12px;font-weight:600;color:var(--accent)}
+.filter-chip button{border:none;background:none;color:var(--accent);font-weight:700;cursor:pointer;padding:0 4px}
+.list-panel{display:flex;flex-direction:column;min-width:0;padding:16px}
+.top-list{list-style:none;display:flex;flex-direction:column;gap:6px;overflow:auto;flex:1;min-height:0;max-height:536px;margin:0 -4px;padding:0 4px}
+.top-item{display:grid;grid-template-columns:44px minmax(0,1fr);gap:11px;align-items:center;width:100%;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:var(--paper);cursor:pointer;font-family:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+.top-item:hover,.top-item:focus-visible{border-color:var(--accent);box-shadow:0 3px 12px rgba(43,109,240,.14);outline:none}
+.top-item .mag{display:grid;place-items:center;height:36px;border-radius:9px;font:700 15px 'JetBrains Mono',monospace;color:#10172a}
+.top-item .place{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.top-item .when{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.depth-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--bg);margin:2px 0 16px}
+.depth-bar span{display:block;height:100%;min-width:2px}
+.depth-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.depth-legend .d{padding:10px 12px;border-radius:11px;border:1px solid var(--line)}
+.depth-legend .d .k{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--ink-soft)}
+.depth-legend .d .k i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.depth-legend .d .n{font:700 22px 'JetBrains Mono',monospace;margin-top:5px;color:var(--ink)}
+.depth-legend .d .n small{font:600 11px Inter,sans-serif;color:var(--ink-faint);margin-left:6px}
+.depth-legend .d .r{font-size:10.5px;color:var(--ink-faint);margin-top:2px}
+.stat-card .spark{grid-column:3;grid-row:1 / 3;width:64px;height:26px;margin-left:6px}
+.stat-card.has-spark{grid-template-columns:20px minmax(0,1fr) auto}
+@media(max-width:1000px){.stat-card .spark{display:none}.stat-card.has-spark{grid-template-columns:20px minmax(0,1fr)}}
+.grid2{margin-bottom:16px}
+.grid2 .panel{min-width:0}
+.chart-wrap{height:230px}
+.region-row{grid-template-columns:minmax(80px,140px) minmax(0,1fr) 44px}
+.leaflet-container{font-family:Inter,sans-serif}
+@media(max-width:980px){.split{grid-template-columns:1fr}.top-list{max-height:380px}}
+@media(max-width:560px){.stat-card .spark{display:none}.stat-card.has-spark{grid-template-columns:20px minmax(0,1fr)}#mapView{height:380px}.map-panel{padding:12px}.depth-legend{grid-template-columns:1fr}.map-legend{gap:6px 9px}}
+
+.facts{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}
+.facts div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.facts div:last-child{border-bottom:none}
+.facts dt{color:var(--ink-soft)}
+.facts dd{font-weight:700;color:var(--ink);text-align:right;min-width:0}
+.facts dd small{display:block;font-weight:500;color:var(--ink-faint);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 footer.pagefoot{font-size:11.5px;color:var(--ink-faint);text-align:center;padding:22px 24px;border-top:1px solid var(--line);line-height:1.8}
 footer.pagefoot a{color:var(--ink-soft)}
 </style>
@@ -342,33 +397,45 @@ footer.pagefoot a{color:var(--ink-soft)}
 
   <div class="stat-row" id="statRow"></div>
 
-  <div class="panel" style="margin-bottom:24px">
-    <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.7 2.6 4 5.6 4 9s-1.3 6.4-4 9c-2.7-2.6-4-5.6-4-9s1.3-6.4 4-9z"/></svg>Swarms &amp; volcanoes</h2>
-    <p class="panel-note">Amber circles are earthquake swarm clusters, sized by event count. Red triangles are volcanoes with recent seismic activity nearby; gray triangles are the rest of the curated list. Click a marker for details.</p>
-    <div style="position:relative">
-      <div id="mapView" style="height:380px;border-radius:10px;overflow:hidden;position:relative"><div class="skeleton chart-skel" id="mapSkel"></div></div>
-      <div class="map-style-bar" id="mapStyleBar">
-        <button class="map-style-btn" type="button" data-tile="light">Light</button>
-        <button class="map-style-btn active" type="button" data-tile="dark">Dark</button>
-        <button class="map-style-btn" type="button" data-tile="satellite">Satellite</button>
-        <button class="map-style-more-toggle" id="mapStyleMoreToggle" type="button" aria-label="More map styles" title="More map styles">&rsaquo;</button>
-        <div class="map-style-popover hidden" id="mapStylePopover">
-          <button class="map-style-btn" type="button" data-tile="terrain">Terrain</button>
-          <button class="map-style-btn" type="button" data-tile="voyager">NatGeo</button>
-          <button class="map-style-btn" type="button" data-tile="street">Street</button>
+  <section class="split">
+    <div class="panel map-panel">
+      <div class="panel-head">
+        <div>
+          <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.7 2.6 4 5.6 4 9s-1.3 6.4-4 9c-2.7-2.6-4-5.6-4-9s1.3-6.4 4-9z"/></svg>Earthquake map</h2>
+          <p class="panel-note" id="mapNote">Each circle is an earthquake, sized and coloured by magnitude.</p>
+        </div>
+        <div class="layer-toggles" id="layerToggles" role="group" aria-label="Map layers">
+          <button type="button" class="chip on" data-layer="quakes" aria-pressed="true"><i class="dot"></i>Earthquakes</button>
+          <button type="button" class="chip on" data-layer="swarms" aria-pressed="true"><i class="sw"></i>Swarms</button>
+          <button type="button" class="chip on" data-layer="volcanoes" aria-pressed="true"><i class="tri"></i>Volcanoes</button>
         </div>
       </div>
+      <div class="map-wrap">
+        <div id="mapView"><div class="skeleton chart-skel" id="mapSkel"></div></div>
+        <div class="map-style-bar" id="mapStyleBar">
+          <button class="map-style-btn" type="button" data-tile="light">Light</button>
+          <button class="map-style-btn active" type="button" data-tile="dark">Dark</button>
+          <button class="map-style-btn" type="button" data-tile="satellite">Satellite</button>
+          <button class="map-style-more-toggle" id="mapStyleMoreToggle" type="button" aria-label="More map styles" title="More map styles">&rsaquo;</button>
+          <div class="map-style-popover hidden" id="mapStylePopover">
+            <button class="map-style-btn" type="button" data-tile="terrain">Terrain</button>
+            <button class="map-style-btn" type="button" data-tile="voyager">NatGeo</button>
+            <button class="map-style-btn" type="button" data-tile="street">Street</button>
+          </div>
+        </div>
+        <div class="map-legend" id="mapLegend" aria-label="Magnitude colour scale"></div>
+      </div>
+      <div id="magFilterChip" class="filter-chip" style="display:none">
+        <span id="magFilterText"></span>
+        <button type="button" id="magFilterClear">&#10005; Clear</button>
+      </div>
     </div>
-    <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:var(--ink-soft);flex-wrap:wrap">
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:var(--warn);display:inline-block"></span>Swarm cluster</span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--bad);display:inline-block"></span>Volcano — near recent activity</span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--ink-faint);display:inline-block"></span>Volcano — other</span>
-    </div>
-    <div id="magFilterChip" style="display:none;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:var(--accent-bg);border-radius:8px;font-size:12px;font-weight:600;color:var(--accent)">
-      <span id="magFilterText"></span>
-      <button type="button" id="magFilterClear" style="border:none;background:none;color:var(--accent);font-weight:700;cursor:pointer;padding:0 4px">✕ Clear</button>
-    </div>
-  </div>
+    <aside class="panel list-panel">
+      <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>Largest earthquakes</h2>
+      <p class="panel-note">Select one to find it on the map.</p>
+      <ol class="top-list" id="topList"></ol>
+    </aside>
+  </section>
 
   <div class="grid2">
     <div class="panel">
@@ -383,24 +450,25 @@ footer.pagefoot a{color:var(--ink-soft)}
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:24px">
-    <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21c-4-4.5-7-8-7-11.5A7 7 0 0 1 19 9.5C19 13 16 16.5 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>Top regions</h2>
-    <p class="panel-note">Where activity is concentrated, parsed from USGS location descriptions</p>
-    <div id="regionList" class="region-list"></div>
-  </div>
-
-  <div class="panel" style="margin-bottom:24px">
+  <div class="grid2">
+  <div class="panel">
     <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>Depth breakdown</h2>
     <p class="panel-note">Standard USGS depth classification</p>
     <div class="depth-row" id="depthRow"></div>
   </div>
+  <div class="panel">
+    <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21c-4-4.5-7-8-7-11.5A7 7 0 0 1 19 9.5C19 13 16 16.5 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>Top regions</h2>
+    <p class="panel-note">Where activity is concentrated, parsed from USGS location descriptions</p>
+    <div id="regionList" class="region-list"></div>
+  </div>
+  </div>
 
-  <div class="panel" style="margin-bottom:24px">
+  <div class="grid2">
+  <div class="panel">
     <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="8" r="2"/><circle cx="15" cy="6" r="2"/><circle cx="11" cy="14" r="2"/><circle cx="18" cy="15" r="2"/><circle cx="6" cy="17" r="2"/></svg>Active swarms</h2>
     <p class="panel-note">Clusters of 8 or more events within roughly 50 km and 3 days of each other in the current window — a simple heuristic, not an official swarm classification</p>
     <div class="swarm-list" id="swarmList"></div>
   </div>
-
   <div class="panel">
     <h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20l7-14 3 5 2-3 6 12H3z"/><path d="M12 8V3"/></svg>Notable volcanoes</h2>
     <p class="panel-note">A curated set of well-known Holocene volcanoes. "Near recent activity" flags volcanoes within 100&nbsp;km of an earthquake in the current window.</p>
@@ -411,6 +479,7 @@ footer.pagefoot a{color:var(--ink-soft)}
         <tbody id="volcBody"></tbody>
       </table>
     </div>
+  </div>
   </div>
 </main>
 
@@ -442,7 +511,30 @@ const G = {
   mapLayer: null,
   magFilterLayer: null,
   activeMagFilter: null,
+  quakeLayer: null,
+  swarmLayer: null,
+  volcLayer: null,
+  markers: [],
+  layers: { quakes:true, swarms:true, volcanoes:true },
 };
+
+// one colour scale for magnitude, shared by the map, its legend, the top list and the bar chart
+const MAG_BINS = [
+  {label:'<3',  col:'#6ea8ff', test:m=>m<3},
+  {label:'3–4', col:'#33d1b8', test:m=>m>=3&&m<4},
+  {label:'4–5', col:'#ffd23f', test:m=>m>=4&&m<5},
+  {label:'5–6', col:'#ff9f1c', test:m=>m>=5&&m<6},
+  {label:'6–7', col:'#ff4d3d', test:m=>m>=6&&m<7},
+  {label:'7+',  col:'#ff2d8a', test:m=>m>=7},
+];
+function magColor(m){ for(const b of MAG_BINS) if(b.test(m)) return b.col; return MAG_BINS[0].col; }
+function timeAgo(ms){
+  const s = Math.max(0, (Date.now()-ms)/1000);
+  if(s < 3600) return Math.max(1, Math.round(s/60)) + ' min ago';
+  if(s < 86400) return Math.round(s/3600) + ' h ago';
+  return Math.round(s/86400) + ' d ago';
+}
+function esc(t){ return String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 const WINDOW_LABELS = {1:'1 day', 7:'7 days', 30:'30 days', 365:'1 year'};
 
@@ -647,6 +739,7 @@ function renderAll(){
   renderSwarms();
   renderVolcanoes();
   renderMap();
+  renderTopList();
 }
 
 async function loadBaseline(windowStart, days, mag){
@@ -682,8 +775,10 @@ function renderBaselineBadge(pctDiff){
   el.style.display = 'block';
 }
 
+const US_ST = {AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',PR:'Puerto Rico'};
 function extractRegion(place){
   if(!place) return 'Unknown';
+  { const tail = place.split(',').pop().trim(); if(US_ST[tail]) return US_ST[tail]; }
   // USGS place strings are typically "12km SW of Ridgecrest, CA" or "56km ESE of Hualien City, Taiwan"
   const parts = place.split(',');
   if(parts.length > 1) return parts[parts.length-1].trim();
@@ -719,6 +814,21 @@ function renderStatCardSkeleton(){
     </div>`).join('');
 }
 
+function sparkline(){
+  // trend of events per day (or per period for long windows) for the Total events card
+  const buckets = Math.min(G.days, 30);
+  const span = G.days*86400000, now = Date.now(), start = now - span;
+  const counts = new Array(buckets).fill(0);
+  G.quakes.forEach(q => {
+    const i = Math.min(buckets-1, Math.max(0, Math.floor((q.time-start)/span*buckets)));
+    counts[i]++;
+  });
+  if(buckets < 3) return '';
+  const max = Math.max(...counts, 1), W = 64, H = 26;
+  const pts = counts.map((c,i)=>`${(i/(buckets-1)*W).toFixed(1)},${(H-2-(c/max)*(H-6)).toFixed(1)}`);
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
 function renderStatRow(){
   const qs = G.quakes;
   const n = qs.length;
@@ -727,17 +837,18 @@ function renderStatRow(){
   const perDay = n ? (n/G.days) : 0;
 
   const cards = [
-    { icon:'<path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/>', accent:'var(--accent)', label:'Total events', value: n.toLocaleString(), badgeId:'totalEventsBadge' },
+    { icon:'<path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/>', accent:'var(--accent)', label:'Total events', value: n.toLocaleString(), badgeId:'totalEventsBadge', spark: true },
     { icon:'<path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/>', accent:'var(--bad)', label:'Largest', value: maxQ ? maxQ.mag.toFixed(1) : '—', sub: maxQ ? maxQ.place : '' },
     { icon:'<path d="M3 3v18h18M7 16l4-6 3 3 5-8"/>', accent:'var(--warn)', label:'Average magnitude', value: n ? avg.toFixed(2) : '—' },
     { icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', accent:'var(--good)', label:'Events per day', value: n ? perDay.toFixed(1) : '—' },
   ];
 
   $('statRow').innerHTML = cards.map(c => `
-    <div class="stat-card" style="--card-accent:${c.accent}">
+    <div class="stat-card${c.spark ? ' has-spark' : ''}" style="--card-accent:${c.accent};${c.spark ? 'color:var(--card-accent)' : ''}">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">${c.icon}</svg>
-      <div class="label">${c.label}</div>
-      <div class="value">${c.value}${c.sub ? `<small>${c.sub}</small>` : ''}${c.badgeId ? `<small id="${c.badgeId}" style="display:none;font-weight:700"></small>` : ''}</div>
+      <div class="label" style="color:var(--ink-faint)">${c.label}</div>
+      <div class="value" style="color:var(--ink)">${c.value}${c.sub ? `<small title="${esc(c.sub)}">${esc(c.sub)}</small>` : ''}${c.badgeId ? `<small id="${c.badgeId}" style="display:none;font-weight:700"></small>` : ''}</div>
+      ${c.spark ? sparkline() : ''}
     </div>`).join('');
 }
 
@@ -751,7 +862,7 @@ function renderMagChart(){
     {label:'7+', min:7, max:Infinity, test:m=>m>=7},
   ];
   const counts = bins.map(b => G.quakes.filter(q=>b.test(q.mag)).length);
-  const colors = ['#8fb8f5','#2b6df0','#e2a112','#e8493c','#b8291b','#6b0f0f'];
+  const colors = MAG_BINS.map(b => b.col);
 
   if(magChartObj) magChartObj.destroy();
   magChartObj = new Chart($('magChart'), {
@@ -819,17 +930,33 @@ function renderDepth(){
   const shallow = G.quakes.filter(q=>q.depth<70).length;
   const inter = G.quakes.filter(q=>q.depth>=70&&q.depth<300).length;
   const deep = G.quakes.filter(q=>q.depth>=300).length;
+  const total = shallow + inter + deep;
   const rows = [
-    {n:shallow, lbl:'Shallow', range:'0–70 km', bg:'var(--accent-bg)', color:'var(--accent)'},
-    {n:inter, lbl:'Intermediate', range:'70–300 km', bg:'var(--warn-bg)', color:'var(--warn)'},
-    {n:deep, lbl:'Deep', range:'300+ km', bg:'var(--bad-bg)', color:'var(--bad)'},
+    {n:shallow, lbl:'Shallow', range:'0–70 km', col:'#2b6df0'},
+    {n:inter, lbl:'Intermediate', range:'70–300 km', col:'#e2a112'},
+    {n:deep, lbl:'Deep', range:'300+ km', col:'#e8493c'},
   ];
-  $('depthRow').innerHTML = rows.map(r=>`
-    <div class="depth-card" style="background:${r.bg}">
-      <div class="n" style="color:${r.color}">${r.n.toLocaleString()}</div>
-      <div class="lbl">${r.lbl}</div>
-      <div class="range">${r.range}</div>
-    </div>`).join('');
+  const pct = n => total ? (n/total*100) : 0;
+  $('depthRow').className = '';
+  $('depthRow').innerHTML = `
+    <div class="depth-bar" role="img" aria-label="Share of earthquakes by depth class">${rows.map(r=>`<span style="width:${pct(r.n).toFixed(2)}%;background:${r.col}" title="${r.lbl}: ${r.n.toLocaleString()}"></span>`).join('')}</div>
+    <div class="depth-legend">${rows.map(r=>`
+      <div class="d"><div class="k"><i style="background:${r.col}"></i>${r.lbl}</div>
+      <div class="n">${r.n.toLocaleString()}<small>${total ? Math.round(pct(r.n)) : 0}%</small></div>
+      <div class="r">${r.range}</div></div>`).join('')}</div>
+    ${depthFacts()}`;
+}
+
+function depthFacts(){
+  const d = G.quakes.map(q=>q.depth).filter(Number.isFinite).sort((a,b)=>a-b);
+  if(!d.length) return '';
+  const med = d.length % 2 ? d[(d.length-1)/2] : (d[d.length/2-1] + d[d.length/2]) / 2;
+  const deepest = G.quakes.reduce((a,b)=> b.depth > a.depth ? b : a);
+  return `<dl class="facts">
+    <div><dt>Median depth</dt><dd>${med.toFixed(0)} km</dd></div>
+    <div><dt>Deepest event</dt><dd>${deepest.depth.toFixed(0)} km <small>M${deepest.mag.toFixed(1)} · ${esc(deepest.place)}</small></dd></div>
+    <div><dt>Shallowest</dt><dd>${Math.max(0,d[0]).toFixed(0)} km</dd></div>
+  </dl>`;
 }
 
 function computeSwarms(){
@@ -904,66 +1031,140 @@ function volcanoIcon(color){
   });
 }
 
+const PLOT_CAP = 4000;
+
+function renderLegend(){
+  $('mapLegend').innerHTML = '<b>Magnitude</b>' + MAG_BINS.map(b => `<span><i style="background:${b.col}"></i>${b.label}</span>`).join('');
+}
+
+function applyLayerVisibility(){
+  if(!G.mapObj) return;
+  [['quakes','quakeLayer'],['swarms','swarmLayer'],['volcanoes','volcLayer']].forEach(([k,layer])=>{
+    const lyr = G[layer]; if(!lyr) return;
+    if(G.layers[k] && !G.mapObj.hasLayer(lyr)) lyr.addTo(G.mapObj);
+    if(!G.layers[k] && G.mapObj.hasLayer(lyr)) G.mapObj.removeLayer(lyr);
+  });
+  $('layerToggles').querySelectorAll('.chip').forEach(c => {
+    const on = !!G.layers[c.dataset.layer];
+    c.classList.toggle('on', on); c.setAttribute('aria-pressed', on);
+  });
+}
+
 function renderMap(){
   if(!G.mapObj){
-    G.mapObj = L.map('mapView', { worldCopyJump:true }).setView([15, 10], 2);
+    G.mapObj = L.map('mapView', { worldCopyJump:true, preferCanvas:true, minZoom:1 }).setView([15, 10], 2);
     G.tileLayerObj = L.tileLayer(TILE_SOURCES[currentTile].url, {
       attribution: TILE_SOURCES[currentTile].attribution, maxZoom: 18, maxNativeZoom: TILE_SOURCES[currentTile].native || 18
     }).addTo(G.mapObj);
-    G.mapLayer = L.layerGroup().addTo(G.mapObj);
+    G.swarmLayer = L.layerGroup();
+    G.volcLayer = L.layerGroup();
+    G.quakeLayer = L.layerGroup();
     G.magFilterLayer = L.layerGroup().addTo(G.mapObj);
   }
-  G.mapLayer.clearLayers();
-  G.magFilterLayer.clearLayers();
+  [G.quakeLayer, G.swarmLayer, G.volcLayer, G.magFilterLayer].forEach(l => l.clearLayers());
   G.activeMagFilter = null;
+  G.markers = [];
   $('magFilterChip').style.display = 'none';
+  renderLegend();
 
-  // swarm clusters — amber circles sized by event count
+  // earthquakes: biggest drawn last (on top); capped for performance on long windows
+  const plotted = G.quakes.slice().sort((a,b)=>a.mag-b.mag).slice(-PLOT_CAP);
+  plotted.forEach(q=>{
+    const col = magColor(q.mag);
+    const m = L.circleMarker([q.lat, q.lon], {
+      radius: Math.max(2.5, 1.2 + (q.mag-1.5)*1.55), color:'#ffffff', weight:.6, opacity:.55, fillColor:col, fillOpacity:.72
+    });
+    m.bindTooltip(()=>`<b>M${q.mag.toFixed(1)}</b> · ${esc(q.place)}`, { sticky:true, direction:'top', opacity:.95 });
+    m.bindPopup(()=>`<b>M${q.mag.toFixed(1)}</b> — ${esc(q.place)}<br>${new Date(q.time).toISOString().slice(0,16).replace('T',' ')} UTC · ${q.depth.toFixed(0)} km deep`);
+    m.addTo(G.quakeLayer);
+    G.markers.push({q, m});
+  });
+  $('mapNote').textContent = G.quakes.length > PLOT_CAP
+    ? `Showing the ${PLOT_CAP.toLocaleString()} largest of ${G.quakes.length.toLocaleString()} earthquakes. Each circle is sized and coloured by magnitude.`
+    : `Each circle is an earthquake, sized and coloured by magnitude. Select a marker for details.`;
+
+  // swarm clusters: amber circles sized by event count
   (G.swarms||[]).forEach(s=>{
-    const radius = 6 + Math.min(s.events.length, 60) * 0.5;
+    const radius = 8 + Math.min(s.events.length, 60) * 0.5;
     const times = s.events.map(e=>e.time).sort((a,b)=>a-b);
     const maxMag = Math.max(...s.events.map(e=>e.mag));
     const start = new Date(times[0]).toISOString().slice(0,10);
     const end = new Date(times[times.length-1]).toISOString().slice(0,10);
     L.circleMarker([s.lat, s.lon], {
-      radius, color:'#e2a112', weight:1.5, fillColor:'#e2a112', fillOpacity:0.35
-    }).bindPopup(`<b>${s.events[0].place}</b><br>${s.events.length} events · largest M${maxMag.toFixed(1)}<br>${start === end ? start : start+' – '+end}`)
-      .addTo(G.mapLayer);
+      radius, color:'#e2a112', weight:2, fillColor:'#e2a112', fillOpacity:0.18, dashArray:'4 3'
+    }).bindPopup(`<b>${esc(s.events[0].place)}</b><br>${s.events.length} events · largest M${maxMag.toFixed(1)}<br>${start === end ? start : start+' – '+end}`)
+      .addTo(G.swarmLayer);
   });
 
-  // volcanoes — triangles, red if near recent activity
+  // volcanoes: triangles, red if near recent activity
   VOLCANOES.forEach(v=>{
     const [name, country, lat, lon, status] = v;
     const near = G.quakes.some(q => haversineKm(lat, lon, q.lat, q.lon) < 100);
     L.marker([lat, lon], { icon: volcanoIcon(near ? '#e8493c' : '#8e98b3') })
       .bindPopup(`<b>${name}</b> (${country})<br>${status}${near ? '<br><span style="color:#e8493c;font-weight:600">Near recent seismic activity</span>' : ''}`)
-      .addTo(G.mapLayer);
+      .addTo(G.volcLayer);
   });
 
+  applyLayerVisibility();
   const mapSkel = $('mapSkel'); if(mapSkel) mapSkel.classList.add('hidden');
   setTimeout(()=>G.mapObj.invalidateSize(), 50);
 }
 
-function applyMagFilter(bin){
-  if(!G.mapObj || !G.magFilterLayer) return;
-  G.activeMagFilter = bin;
-  G.magFilterLayer.clearLayers();
-  const matches = G.quakes.filter(q => bin.test(q.mag)).slice(0, 2000); // cap for render performance
-  matches.forEach(q => {
-    L.circleMarker([q.lat, q.lon], {
-      radius: 4, color:'#2b6df0', weight:1, fillColor:'#2b6df0', fillOpacity:0.6
-    }).bindPopup(`M${q.mag.toFixed(1)} — ${q.place}<br>${new Date(q.time).toISOString().slice(0,16).replace('T',' ')} UTC`)
-      .addTo(G.magFilterLayer);
+function renderTopList(){
+  const top = G.quakes.slice().sort((a,b)=>b.mag-a.mag || b.time-a.time).slice(0, 10);
+  if(!top.length){ $('topList').innerHTML = '<li class="empty-note">No earthquakes in this window.</li>'; return; }
+  $('topList').innerHTML = top.map((q,i)=>`
+    <li><button type="button" class="top-item" data-i="${i}" title="Show on map">
+      <span class="mag" style="background:${magColor(q.mag)}">${q.mag.toFixed(1)}</span>
+      <span><span class="place">${esc(q.place)}</span><span class="when">${timeAgo(q.time)} · ${q.depth.toFixed(0)} km deep</span></span>
+    </button></li>`).join('');
+  $('topList').dataset.ids = '';
+  G.top = top;
+}
+
+function focusQuake(q){
+  const hit = G.markers.find(x => x.q === q);
+  if(!G.mapObj) return;
+  if(!G.layers.quakes){ G.layers.quakes = true; applyLayerVisibility(); }
+  G.mapObj.flyTo([q.lat, q.lon], Math.max(G.mapObj.getZoom(), 5), { duration:.8 });
+  if(hit) setTimeout(()=>hit.m.openPopup(), 850);
+  $('mapView').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+$('topList').addEventListener('click', e=>{
+  const b = e.target.closest('.top-item'); if(!b || !G.top) return;
+  focusQuake(G.top[Number(b.dataset.i)]);
+});
+
+$('layerToggles').addEventListener('click', e=>{
+  const c = e.target.closest('.chip'); if(!c) return;
+  G.layers[c.dataset.layer] = !G.layers[c.dataset.layer];
+  applyLayerVisibility();
+});
+
+// highlight one magnitude range: the rest fades back, the matches stay bright
+function styleForFilter(){
+  const bin = G.activeMagFilter;
+  G.markers.forEach(({q,m})=>{
+    if(!bin){ m.setStyle({ fillOpacity:.72, opacity:.55 }); return; }
+    const hit = bin.test(q.mag);
+    m.setStyle({ fillOpacity: hit ? .95 : .06, opacity: hit ? .9 : .06 });
+    if(hit) m.bringToFront();
   });
+}
+function applyMagFilter(bin){
+  if(!G.mapObj) return;
+  G.activeMagFilter = bin;
+  if(!G.layers.quakes){ G.layers.quakes = true; applyLayerVisibility(); }
+  styleForFilter();
   const total = G.quakes.filter(q => bin.test(q.mag)).length;
-  $('magFilterText').textContent = `Showing magnitude ${bin.label} (${total.toLocaleString()} event${total===1?'':'s'}${total>2000?', first 2,000 plotted':''})`;
+  $('magFilterText').textContent = `Highlighting magnitude ${bin.label} (${total.toLocaleString()} event${total===1?'':'s'})`;
   $('magFilterChip').style.display = 'flex';
   $('mapView').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 function clearMagFilter(){
   G.activeMagFilter = null;
-  if(G.magFilterLayer) G.magFilterLayer.clearLayers();
+  styleForFilter();
   $('magFilterChip').style.display = 'none';
 }
 $('magFilterClear')?.addEventListener('click', clearMagFilter);
