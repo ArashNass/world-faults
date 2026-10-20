@@ -1604,8 +1604,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 .app-footer-copy{color:var(--ink-soft);font-weight:600;margin-bottom:4px}
 </style>
 <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0WERZ6WKQY"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-0WERZ6WKQY");</script>
+<script defer src="/assets/analytics.js?v=2"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1707,6 +1706,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',build);else build();
 })();
 </script>
+
+<script defer src="/assets/engagement.js?v=1"></script>
+<script type="module" src="/assets/vitals.js?v=1"></script>
+<link rel="stylesheet" href="/assets/tool-guide.css?v=1">
 </head>
 <body>
 <!-- shared site header -->
@@ -1817,7 +1820,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 
       <div class="quake-bar">
         <div class="quake-feed-wrap">
-          <button class="quake-toggle active" id="quakeFeedToggle" type="button" role="switch" aria-checked="true">
+          <button class="quake-toggle active" id="quakeFeedToggle" data-track-action="toggle_earthquakes" type="button" role="switch" aria-checked="true">
             <span class="pulse-dot" id="quakeToggleDot"></span>
             <span class="qt-text"><span id="quakeToggleLabel">Recent earthquakes</span><small id="quakeToggleHint">Showing on the globe &middot; tap to hide</small></span>
             <span class="qt-switch" aria-hidden="true"></span>
@@ -1847,10 +1850,10 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
       <div class="quake-layout">
         <div class="quake-viewer-wrap" id="quakeViewerWrap">
           <canvas id="quakeViewer"></canvas>
-          <button class="globe-spin-toggle" id="globeSpinToggle" type="button" aria-label="Pause globe spin" title="Pause globe spin">❚❚</button>
-          <button class="globe-fullscreen-toggle" id="globeFullscreenToggle" type="button" aria-label="Enter full screen" title="Enter full screen">⛶</button>
+          <button class="globe-spin-toggle" id="globeSpinToggle" data-track-action="toggle_globe_spin" type="button" aria-label="Pause globe spin" title="Pause globe spin">❚❚</button>
+          <button class="globe-fullscreen-toggle" id="globeFullscreenToggle" data-track-action="toggle_fullscreen" type="button" aria-label="Enter full screen" title="Enter full screen">⛶</button>
           <button class="globe-reset-toggle" id="globeResetToggle" type="button" aria-label="Straighten globe" title="Straighten globe">↺</button>
-          <button class="globe-layers-toggle" id="globeLayersToggle" type="button" aria-label="Map layers" title="Map layers">
+          <button class="globe-layers-toggle" id="globeLayersToggle" data-track-action="open_layers" type="button" aria-label="Map layers" title="Map layers">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3.5 7.5 12 12l8.5-4.5L12 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m5.5 11 6.5 3.5 6.5-3.5M5.5 15l6.5 3.5 6.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <button class="globe-clean-toggle" id="globeCleanToggle" type="button" aria-label="Enter clean screenshot view" title="Clean screenshot view">
@@ -1905,7 +1908,8 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
     </div>
     </div><!-- /card -->
 
-  <footer class="app-footer">
+  <section class="platform-guide" aria-labelledby="platform-guide-title"><h2 id="platform-guide-title">Using world fault map</h2><p>Explore simplified traces of major fault systems alongside recent earthquake data. Filter mechanisms, select a fault and compare its tectonic setting with the earthquake layer.</p><details><summary>Try a worked example</summary><ol><li>Select the San Andreas Fault and read its mechanism and tectonic setting.</li><li>Filter for normal faults and compare the highlighted systems.</li><li>Change the earthquake time window and minimum magnitude; read the update status to see whether live or snapshot data is shown.</li></ol></details><nav aria-label="Related tools"><a href="/earthquake-rupture/">Fault mechanism</a><a href="/world-faults/stats/">Earthquake statistics</a></nav></section>
+<footer class="app-footer">
     <div>Plate boundaries: Bird, P. (2003), <em>An updated digital model of plate boundaries</em>, <em>Geochemistry, Geophysics, Geosystems</em>, PB2002 model, via <a href="https://github.com/fraxen/tectonicplates" target="_blank" rel="noopener">fraxen/tectonicplates</a>.</div>
     <div>Earthquake data: <a href="https://earthquake.usgs.gov" target="_blank" rel="noopener">USGS Earthquake Hazards Program</a>. Globe imagery derived from NASA Visible Earth Blue Marble.</div>
   </footer>
@@ -2060,7 +2064,7 @@ button:hover{background:#eef1f8;border-color:#cfd7e8}
 
   const globeCanvas = document.getElementById("quakeViewer");
   const renderer3 = new THREE.WebGLRenderer({canvas:globeCanvas, antialias:true, alpha:true});
-  renderer3.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer3.setPixelRatio(Math.min(window.devicePixelRatio || 1, matchMedia('(max-width: 600px)').matches ? 1.5 : 2));
   renderer3.toneMapping = THREE.ACESFilmicToneMapping;
   renderer3.toneMappingExposure = 1.1;
 
@@ -2897,7 +2901,10 @@ const QUAKE_SNAPSHOT_DATE = '11 Oct 2026 18:13 UTC';
   globeReady = true;
   applyGlobeTheme(root.dataset.theme === "dark");
 
+  let platformSceneVisible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries => { platformSceneVisible = entries[0].isIntersecting; }, {rootMargin:'100px'}).observe(renderer3.domElement);
   function animate3(){
+    if (document.hidden || !platformSceneVisible) { requestAnimationFrame(animate3); return; }
     controls3.update();
     if(camTween3){
       const e = Math.min(1, (performance.now() - camTween3.t0) / camTween3.dur);
